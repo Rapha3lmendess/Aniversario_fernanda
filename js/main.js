@@ -3,11 +3,14 @@
   initTheme();
   initMenu();
   initSectionNavigation();
+  initBirthdayWelcome();
   initCinematicIntro();
   initIntroParallax();
   initGlobalAudio();
   initRelationshipCounter();
+  initDatingCounter();
   initReveal();
+  initFavoritePhotoCarousel();
   initGalleryThumbs();
   initGalleryModal();
   initLetterCards();
@@ -122,7 +125,10 @@ function initCinematicIntro() {
   const skipButton = intro.querySelector('[data-skip-intro]');
   const message = intro.querySelector('[data-intro-message]');
   const pageShell = document.querySelector('.page-shell');
-  if (sessionStorage.getItem(key)) return;
+  if (sessionStorage.getItem(key)) {
+    showBirthdayWelcome();
+    return;
+  }
 
   intro.hidden = false;
   requestAnimationFrame(() => intro.classList.add('visible'));
@@ -143,14 +149,10 @@ function initCinematicIntro() {
     }
   }
 
-  const finish = (startMusic, animateEntry = false) => {
+  const finish = (animateEntry = false) => {
     if (intro.classList.contains('leaving')) return;
     const shouldAnimateEntry = animateEntry && !reducedMotion;
     sessionStorage.setItem(key, '1');
-    if (startMusic) {
-      const audioToggle = document.querySelector('[data-audio-toggle]');
-      if (audioToggle) audioToggle.click();
-    }
     if (shouldAnimateEntry) intro.classList.add('launching');
     intro.classList.add('leaving');
     const duration = reducedMotion ? 0 : shouldAnimateEntry ? 1250 : 750;
@@ -164,11 +166,55 @@ function initCinematicIntro() {
           pageShell.removeEventListener('animationend', clearArrival);
         };
         pageShell.addEventListener('animationend', clearArrival);
+        window.setTimeout(showBirthdayWelcome, 850);
+      } else {
+        showBirthdayWelcome();
       }
     }, duration);
   };
-  enterButton?.addEventListener('click', () => finish(true, true));
+  enterButton?.addEventListener('click', () => finish(true));
   skipButton?.addEventListener('click', () => finish(false));
+}
+
+function initBirthdayWelcome() {
+  const welcome = document.querySelector('[data-birthday-welcome]');
+  const continueButton = welcome?.querySelector('[data-birthday-continue]');
+  const confetti = welcome?.querySelector('[data-birthday-confetti]');
+  if (!welcome || !continueButton) return;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (confetti) {
+    for (let index = 0; index < 90; index += 1) {
+      const piece = document.createElement('span');
+      piece.className = 'birthday-confetti-piece';
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.top = `${Math.random() * 100}%`;
+      piece.style.setProperty('--hue', String(Math.round(Math.random() * 360)));
+      if (!reducedMotion) {
+        piece.style.setProperty('--fall-delay', `${Math.random() * -8}s`);
+        piece.style.setProperty('--fall-duration', `${4 + Math.random() * 5}s`);
+        piece.style.setProperty('--sway', `${Math.round(Math.random() * 160 - 80)}px`);
+      }
+      confetti.appendChild(piece);
+    }
+  }
+
+  continueButton.addEventListener('click', () => {
+    sessionStorage.setItem('princesa-aniversario-completo', '1');
+    welcome.hidden = true;
+    welcome.classList.remove('visible');
+    document.querySelector('[data-audio-toggle]')?.click();
+  });
+}
+
+function showBirthdayWelcome() {
+  const welcome = document.querySelector('[data-birthday-welcome]');
+  if (!welcome || sessionStorage.getItem('princesa-aniversario-completo')) return;
+  welcome.hidden = false;
+  requestAnimationFrame(() => {
+    welcome.classList.add('visible');
+    welcome.querySelector('[data-birthday-continue]')?.focus({ preventScroll: true });
+  });
 }
 
 function initIntroParallax() {
@@ -269,6 +315,29 @@ function initRelationshipCounter() {
   if (message) message.textContent = 'Cada dia é mais uma parte da nossa história.';
 }
 
+function initDatingCounter() {
+  const counter = document.querySelector('[data-dating-counter]');
+  if (!counter) return;
+  const startValue = counter.dataset.datingStart.trim();
+  const anniversaryValue = counter.dataset.firstAnniversary.trim();
+  const daysElement = counter.querySelector('[data-dating-days]');
+  const message = counter.querySelector('[data-dating-message]');
+  const startDate = new Date(`${startValue}T00:00:00`);
+  const anniversaryDate = new Date(`${anniversaryValue}T00:00:00`);
+  if (!startValue || !anniversaryValue || Number.isNaN(startDate.getTime()) || Number.isNaN(anniversaryDate.getTime())) return;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysTogether = Math.max(0, Math.floor((today.getTime() - startDate.getTime()) / 86400000));
+  const daysUntilAnniversary = Math.max(0, Math.ceil((anniversaryDate.getTime() - today.getTime()) / 86400000));
+  if (daysElement) daysElement.textContent = daysTogether.toLocaleString('pt-BR');
+  if (message) {
+    message.textContent = daysUntilAnniversary
+      ? `Faltam ${daysUntilAnniversary} dias para completarmos 1 ano de namoro.`
+      : 'Já celebramos nosso primeiro ano de namoro! ♡';
+  }
+}
+
 function initEnvelopeCards() {
   document.querySelectorAll('.envelope-card .letter-toggle').forEach((button) => {
     button.addEventListener('click', () => {
@@ -308,7 +377,7 @@ function initReveal() {
 function initGalleryThumbs() {
   const initializedAreas = new Set();
   document.querySelectorAll('[data-photo-src], [data-gallery-src]').forEach((item) => {
-    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame, .avatar-portrait')
+    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame, .portrait-slide, .avatar-portrait')
       ? item
       : item.querySelector('.thumb, .photo-placeholder, .avatar-portrait');
     if (!photoArea || initializedAreas.has(photoArea)) return;
@@ -323,6 +392,45 @@ function initGalleryThumbs() {
     }, { once: true });
     image.addEventListener('error', () => image.remove(), { once: true });
     image.src = item.dataset.photoSrc || item.dataset.gallerySrc;
+  });
+}
+
+function initFavoritePhotoCarousel() {
+  document.querySelectorAll('[data-favorite-carousel]').forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll('.portrait-slide')];
+    const previous = carousel.querySelector('[data-carousel-prev]');
+    const next = carousel.querySelector('[data-carousel-next]');
+    const status = carousel.querySelector('[data-carousel-status]');
+    const dots = [...carousel.querySelectorAll('[data-carousel-to]')];
+    if (slides.length < 2 || !previous || !next) return;
+
+    let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
+    if (activeIndex < 0) activeIndex = 0;
+
+    const showSlide = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === activeIndex;
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === activeIndex;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-current', String(isActive));
+      });
+      if (status) status.textContent = `${activeIndex + 1} / ${slides.length}`;
+    };
+
+    previous.addEventListener('click', () => showSlide(activeIndex - 1));
+    next.addEventListener('click', () => showSlide(activeIndex + 1));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const index = Number(dot.dataset.carouselTo);
+        if (Number.isInteger(index) && index >= 0 && index < slides.length) showSlide(index);
+      });
+    });
+    showSlide(activeIndex);
   });
 }
 
