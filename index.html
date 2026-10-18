@@ -9,137 +9,162 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/main.js" defer></script>
 </head>
-<body>
+<!-- Configure data-audio-src somente com arquivo autorizado, por exemplo assets/audio/the-time-dirty-bit.mp3. -->
+<body data-audio-src="">
   <canvas id="particle-canvas"></canvas>
   <div class="cursor-glow"></div>
 
+  <section class="cinematic-intro" data-cinematic-intro hidden aria-labelledby="intro-title">
+    <div class="intro-stars intro-stars-back"></div>
+    <div class="intro-stars intro-stars-front"></div>
+    <div class="intro-vignette"></div>
+    <div class="intro-content">
+      <p class="eyebrow">uma surpresa para você</p>
+      <h1 id="intro-title">Minha <span class="highlight">Princesa</span></h1>
+      <p class="intro-message" data-intro-message aria-live="polite"></p>
+      <button class="primary-button intro-enter" type="button" data-enter-universe>Entrar no nosso universo</button>
+      <button class="intro-skip" type="button" data-skip-intro>Pular introdução</button>
+    </div>
+  </section>
+
   <div class="page-shell">
     <header class="cabecalho">
-      <a href="index.html" class="logo">para minha princesa <span>♡</span></a>
+      <a href="index.html" class="logo"><span class="logo-full">para minha princesa</span><span class="logo-heart">♡</span><span class="logo-mobile">nosso universo</span></a>
       <div class="header-actions">
-        <button class="theme-toggle" type="button" aria-label="Ativar tema claro">
+        <button class="theme-toggle" type="button" aria-label="Ativar tema claro" title="Ativar tema claro">
           <span class="sun-icon">☀</span>
           <span class="moon-icon">☾</span>
         </button>
-        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
-          <span></span><span></span><span></span>
+        <button class="menu-toggle" type="button" aria-label="Abrir navegação" aria-expanded="false" aria-controls="main-menu">
+          <span>•••</span>
         </button>
-        <nav class="menu-panel" aria-label="Menu principal">
-          <a class="menu-link" href="index.html"><span>Início</span><span class="menu-mark">01</span></a>
-          <a class="menu-link" href="Paginas/historia.html"><span>Nossa história</span><span class="menu-mark">02</span></a>
-          <a class="menu-link" href="Paginas/galeria.html"><span>Galeria</span><span class="menu-mark">03</span></a>
-          <a class="menu-link" href="Paginas/cartas.html"><span>Cartas</span><span class="menu-mark">04</span></a>
-          <a class="menu-link" href="Paginas/trilha-sonora.html"><span>Nossa trilha</span><span class="menu-mark">05</span></a>
-          <a class="menu-link" href="Paginas/surpresa.html"><span>Surpresa</span><span class="menu-mark">06</span></a>
-          <a class="menu-link" href="Paginas/futuro.html"><span>Nosso futuro</span><span class="menu-mark">07</span></a>
-          <a class="menu-link" href="Paginas/jogos.html"><span>Jogos</span><span class="menu-mark">08</span></a>
-          <a class="menu-link" href="Paginas/roblox.html"><span>Roblox</span><span class="menu-mark">09</span></a>
+        <nav class="menu-panel" id="main-menu" aria-label="Áreas principais">
+          <a class="menu-link" href="#universe"><span class="menu-icon">✧</span><span><strong>Nosso universo</strong><small>História, fotos e sonhos</small></span></a>
+          <a class="menu-link" href="#letters"><span class="menu-icon">♡</span><span><strong>Cartas &amp; surpresas</strong><small>Mensagens feitas com carinho</small></span></a>
+          <a class="menu-link" href="#gamer"><span class="menu-icon">◇</span><span><strong>Nosso mundo gamer</strong><small>Jogos e memórias</small></span></a>
+          <a class="menu-link" href="#challenges"><span class="menu-icon">✦</span><span><strong>Nossos desafios</strong><small>Quiz e caça-palavras</small></span></a>
+          <button class="menu-link menu-action" type="button" data-theme-menu-toggle><span class="menu-icon">☼</span><span><strong>Alternar tema</strong><small>Claro ou escuro</small></span></button>
+          <button class="menu-link menu-action" type="button" data-audio-menu-toggle><span class="menu-icon">♫</span><span><strong>Trilha sonora</strong><small data-audio-menu-status>Trilha não configurada</small></span></button>
         </nav>
       </div>
     </header>
 
     <main class="page-main">
-      <section class="hero" data-reveal>
-        <div class="hero-copy">
-          <p class="eyebrow">um presente feito com amor</p>
-          <h1>Para a minha <span class="highlight">princesa.</span></h1>
-          <p class="hero-lead">
-            Entre tantas pessoas no mundo, que sorte a minha ter encontrado você. Este cantinho foi criado para guardar nossas lembranças,
-            celebrar a sua presença e registrar a história mais bonita que estamos escrevendo.
-          </p>
-          <div class="hero-actions">
-            <a href="Paginas/historia.html" class="primary-button">Conhecer nossa história →</a>
-            <a href="Paginas/cartas.html" class="secondary-button">Uma carta para você ♡</a>
+      <section class="universe-section" id="universe" data-area="universe">
+        <section class="hero" data-reveal>
+          <div class="hero-copy">
+            <p class="eyebrow">um presente feito com amor</p>
+            <h1>Para a minha <span class="highlight">princesa.</span></h1>
+            <p class="hero-lead">Entre tantas pessoas no mundo, que sorte a minha ter encontrado você. Este cantinho foi criado para guardar nossas lembranças, celebrar a sua presença e registrar a história que estamos escrevendo.</p>
+            <div class="hero-actions">
+              <a href="#timeline" class="primary-button">Nossa história →</a>
+              <a href="#letters" class="secondary-button">Uma carta para você ♡</a>
+            </div>
+            <div class="hero-meta"><span>Um universo nosso</span><span>Feito com carinho</span></div>
           </div>
-          <div class="hero-meta">
-            <span>22 de outubro</span>
-            <span>25 de outubro</span>
-            <span>nossa história</span>
-          </div>
-        </div>
-
-        <div class="hero-visual">
-          <div class="portrait-frame" data-photo-src="images/foto-principal.jpg" data-photo-alt="Nossa foto especial" aria-label="Nossa foto especial">
-            <div class="portrait-glow"></div>
-            <div class="portrait-badge">
-              <strong>foto favorita</strong>
-              <p>Um espaço reservado para uma lembrança especial entre nós.</p>
+          <div class="hero-visual">
+            <div class="portrait-frame" data-photo-src="images/foto-principal.jpg" data-photo-alt="Nossa foto especial" aria-label="Espaço para nossa foto principal">
+              <div class="portrait-glow"></div>
+              <div class="portrait-badge"><strong>foto favorita</strong><p>Um espaço para uma lembrança especial.</p></div>
             </div>
           </div>
-        </div>
+        </section>
+
+        <section class="section-shell relationship-section" data-reveal>
+          <div class="section-heading"><div><p class="kicker">o tempo que construímos</p><h2>Uma história feita <span class="accent">de nós.</span></h2></div><p>Configure a data de início no atributo data-relationship-start para começar o contador.</p></div>
+          <div class="counter-panel" data-relationship-counter data-relationship-start="">
+            <div><strong data-counter-days>—</strong><span>dias de história</span></div>
+            <p data-counter-message>Nosso contador começa quando você adicionar a data.</p>
+          </div>
+        </section>
+
+        <section class="section-shell" id="timeline" data-reveal>
+          <div class="section-heading"><div><p class="kicker">capítulo por capítulo</p><h2>Nossa <span class="accent">história.</span></h2></div><p>Complete os momentos com datas e lembranças reais de vocês.</p></div>
+          <div class="story-grid">
+            <article class="story-card"><div class="meta">01 · o começo</div><h3>Como tudo começou</h3><p>[Conte como vocês se conheceram e o que tornou esse momento especial.]</p></article>
+            <article class="story-card"><div class="meta">02 · uma lembrança</div><h3>Um momento único</h3><p>[Adicione uma conversa, encontro ou viagem que você queira guardar.]</p></article>
+            <article class="story-card"><div class="meta">03 · o presente</div><h3>O que vivemos hoje</h3><p>[Registre uma conquista ou um detalhe recente da história de vocês.]</p></article>
+          </div>
+        </section>
+
+        <section class="section-shell" id="gallery" data-reveal>
+          <div class="section-heading"><div><p class="kicker">memórias em foco</p><h2>Fotos que valem <span class="accent">mil sorrisos.</span></h2></div><p>Cada espaço pode receber uma foto local e uma legenda editável.</p></div>
+          <div class="photo-collage">
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-01.jpg" data-gallery-title="O primeiro sorriso" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-01.jpg"><span>Foto 01</span></div><figcaption>O primeiro sorriso.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-02.jpg" data-gallery-title="O momento que ficou" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-02.jpg"><span>Foto 02</span></div><figcaption>O momento que ficou.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-03.jpg" data-gallery-title="Nosso olhar" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-03.jpg"><span>Foto 03</span></div><figcaption>Nosso olhar.</figcaption></figure>
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-04.jpg" data-gallery-title="Quem a gente é" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-04.jpg"><span>Foto 04</span></div><figcaption>Quem a gente é.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-05.jpg" data-gallery-title="Um dia especial" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-05.jpg"><span>Foto 05</span></div><figcaption>Um dia especial.</figcaption></figure>
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-06.jpg" data-gallery-title="Mais uma lembrança" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-06.jpg"><span>Foto 06</span></div><figcaption>Mais uma lembrança.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-07.jpg" data-gallery-title="Um passeio nosso" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-07.jpg"><span>Foto 07</span></div><figcaption>Um passeio nosso.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-08.jpg" data-gallery-title="Um sorriso guardado" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-08.jpg"><span>Foto 08</span></div><figcaption>Um sorriso guardado.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-09.jpg" data-gallery-title="Mais uma memória" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-09.jpg"><span>Foto 09</span></div><figcaption>Mais uma memória.</figcaption></figure>
+          </div>
+          <div class="gallery-modal" data-gallery-modal aria-modal="true" role="dialog" aria-label="Visualização da foto">
+            <div class="gallery-modal-panel"><button class="gallery-close" type="button" aria-label="Fechar imagem">×</button><img class="gallery-modal-art" data-gallery-image alt="" hidden /><div class="gallery-modal-placeholder">Memória</div><div class="gallery-modal-content"><h3>Lembrança</h3><p>Uma lembrança especial para guardar.</p></div></div>
+          </div>
+        </section>
+
+        <section class="section-shell future-section" id="future" data-reveal>
+          <div class="section-heading"><div><p class="kicker">ainda temos muito para viver</p><h2>Sonhos para <span class="accent">o futuro.</span></h2></div></div>
+          <div class="progress-grid">
+            <article class="progress-card"><div class="meta">01 · lugares</div><h3>Lugares para conhecer</h3><p>[Destino para colocar na lista de vocês.]</p></article>
+            <article class="progress-card"><div class="meta">02 · sonhos</div><h3>Sonhos para realizar</h3><p>[Um sonho para planejar e viver juntos.]</p></article>
+            <article class="progress-card"><div class="meta">03 · momentos</div><h3>Coisas para viver</h3><p>[Uma experiência nova que querem experimentar.]</p></article>
+          </div>
+        </section>
       </section>
 
-      <section class="section-shell" data-reveal>
-        <div class="section-heading">
-          <div>
-            <p class="kicker">o nosso pequeno universo</p>
-            <h2>Nossa história merece <span class="accent">ser lembrada.</span></h2>
+      <section class="main-area letters-area" id="letters" data-area="letters">
+        <section class="page-hero" data-reveal><p class="kicker">palavras vindas do coração</p><h1>Cartas <span class="highlight">&amp; surpresas.</span></h1><p>Uma carta principal, mensagens para ocasiões especiais e uma última surpresa — personalize os espaços com suas próprias palavras.</p></section>
+        <section class="page-panel" data-reveal>
+          <div class="canva-card"><div class="canva-image" data-photo-src="images/cartinha-canva.jpg" aria-label="Espaço para a cartinha do Canva"><span>Sua cartinha do Canva ficará aqui</span></div><p>Adicione sua imagem como <strong>images/cartinha-canva.jpg</strong>.</p></div>
+          <div class="letter-stack">
+            <article class="letter-card envelope-card"><div class="letter-meta"><div class="letter-title-wrap"><div class="letter-stamp">♡</div><h3>Carta principal</h3></div><button class="letter-toggle" type="button" aria-expanded="false">Abrir carta</button></div><div class="letter-body"><div class="letter-inner"><div class="letter-text"><p>[Escreva aqui sua carta principal. Este texto é um espaço editável, não uma lembrança inventada.]</p></div></div></div></article>
+            <article class="letter-card envelope-card"><div class="letter-meta"><div class="letter-title-wrap"><div class="letter-stamp">✉</div><h3>Feliz aniversário</h3></div><button class="letter-toggle" type="button" aria-expanded="false">Abrir carta</button></div><div class="letter-body"><div class="letter-inner"><div class="letter-text"><p>Meu amor, hoje é o seu dia, e eu quero que você saiba o quanto sua existência torna minha vida mais especial.</p><p>Espero que este novo ciclo seja cheio de felicidade, paz, sonhos realizados e motivos para sorrir todos os dias.</p></div></div></div></article>
+            <article class="letter-card envelope-card"><div class="letter-meta"><div class="letter-title-wrap"><div class="letter-stamp">✉</div><h3>Um ano de nós</h3></div><button class="letter-toggle" type="button" aria-expanded="false">Abrir carta</button></div><div class="letter-body"><div class="letter-inner"><div class="letter-text"><p>Um ano ao seu lado representa lembranças, aprendizados e momentos que guardarei com carinho para sempre.</p><p>Quero continuar escrevendo essa história com você, com calma, leveza e amor.</p></div></div></div></article>
+            <article class="letter-card envelope-card"><div class="letter-meta"><div class="letter-title-wrap"><div class="letter-stamp">♡</div><h3>Para um dia especial</h3></div><button class="letter-toggle" type="button" aria-expanded="false">Abrir carta</button></div><div class="letter-body"><div class="letter-inner"><div class="letter-text"><p>[Adicione uma mensagem para o momento que você escolher.]</p></div></div></div></article>
           </div>
-          <p>Momentos simples, sorrisos sinceros e uma conexão que merece ser celebrada com cuidado e carinho.</p>
-        </div>
-
-        <div class="card-grid">
-          <article class="feature-card">
-            <div class="feature-icon">✦</div>
-            <h3>Nossa história</h3>
-            <p>Os capítulos que nos trouxeram até aqui e os momentos que quero guardar para sempre.</p>
-            <a href="Paginas/historia.html" class="card-link">Relembrar →</a>
-          </article>
-          <article class="feature-card">
-            <div class="feature-icon">▧</div>
-            <h3>Nossas memórias</h3>
-            <p>Fotografias, detalhes e lembranças de tudo aquilo que faz a nossa história parecer única.</p>
-            <a href="Paginas/galeria.html" class="card-link">Ver galeria →</a>
-          </article>
-          <article class="feature-card">
-            <div class="feature-icon">♡</div>
-            <h3>Cartas para você</h3>
-            <p>Palavras vindas do coração, guardadas com atenção para você ler quando quiser.</p>
-            <a href="Paginas/cartas.html" class="card-link">Ler cartas →</a>
-          </article>
-        </div>
+          <div class="reveal-box final-surprise"><p class="kicker">uma última coisinha</p><p>Confesso que esse cantinho também guarda uma mensagem que merece ser revelada com calma e carinho.</p><button class="primary-button" type="button" data-reveal-message>Revelar surpresa</button><div class="hidden-message" data-final-surprise aria-live="polite">Meu amor, obrigada por fazer parte da minha vida e por transformar momentos simples em lembranças incríveis. Você é uma presença que torna tudo mais bonito.</div></div>
+        </section>
       </section>
 
-      <section class="section-shell" data-reveal>
-        <div class="section-heading">
-          <div>
-            <p class="kicker">memórias em foco</p>
-            <h2>Fotos que valem <span class="accent">mil sorrisos.</span></h2>
+      <section class="main-area gamer-area" id="gamer" data-area="gamer">
+        <section class="page-hero" data-reveal><p class="kicker">aventuras no nosso ritmo</p><h1>Nosso mundo <span class="highlight">gamer.</span></h1><p>Um lugar para Roblox, avatares, jogos favoritos e prints de partidas de vocês. Os espaços estão vazios até você adicionar seus próprios arquivos.</p></section>
+        <section class="page-panel" data-reveal>
+          <div class="gamer-grid">
+            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/avatar-01.jpg"><span>Avatar 1</span></div><h3>Meu avatar</h3><p>[Nome ou descrição opcional.]</p></article>
+            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/avatar-02.jpg"><span>Avatar 2</span></div><h3>Seu avatar</h3><p>[Nome ou descrição opcional.]</p></article>
           </div>
-        </div>
+          <div class="section-heading"><div><p class="kicker">prints e lembranças</p><h2>Partidas para <span class="accent">guardar.</span></h2></div><p>Adicione seus prints em images/gamer/ sem inventar imagens.</p></div>
+          <div class="photo-collage gamer-photos">
+            <figure class="photo-card" data-photo-src="images/gamer/partida-01.jpg"><div class="photo-placeholder"><span>Print de partida 01</span></div><figcaption>[Legenda opcional]</figcaption></figure>
+            <figure class="photo-card" data-photo-src="images/gamer/partida-02.jpg"><div class="photo-placeholder"><span>Print de partida 02</span></div><figcaption>[Uma memória engraçada]</figcaption></figure>
+            <figure class="photo-card" data-photo-src="images/gamer/partida-03.jpg"><div class="photo-placeholder"><span>Print de partida 03</span></div><figcaption>[Jogo que queremos experimentar]</figcaption></figure>
+          </div>
+          <div class="story-grid gamer-notes"><article class="story-card"><div class="meta">favoritos</div><h3>Jogos favoritos</h3><p>[Adicione os jogos de vocês.]</p></article><article class="story-card"><div class="meta">próxima partida</div><h3>Para experimentar</h3><p>[Anote um jogo para jogar juntos.]</p></article><article class="story-card"><div class="meta">memórias</div><h3>Momentos engraçados</h3><p>[Registre uma história engraçada da partida.]</p></article></div>
+        </section>
+      </section>
 
-        <div class="photo-collage">
-          <figure class="photo-card tall">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-01.jpg"><span>Foto 01</span></div>
-            <figcaption>O primeiro sorriso.</figcaption>
-          </figure>
-          <figure class="photo-card">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-02.jpg"><span>Foto 02</span></div>
-            <figcaption>O momento que ficou.</figcaption>
-          </figure>
-          <figure class="photo-card">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-03.jpg"><span>Foto 03</span></div>
-            <figcaption>Nosso olhar.</figcaption>
-          </figure>
-          <figure class="photo-card tall">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-04.jpg"><span>Foto 04</span></div>
-            <figcaption>Quem a gente é.</figcaption>
-          </figure>
-          <figure class="photo-card">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-05.jpg"><span>Foto 05</span></div>
-            <figcaption>Um dia especial.</figcaption>
-          </figure>
-          <figure class="photo-card tall">
-            <div class="photo-placeholder" data-photo-src="images/galeria/foto-06.jpg"><span>Foto 06</span></div>
-            <figcaption>Mais uma lembrança.</figcaption>
-          </figure>
-        </div>
+      <section class="main-area challenges-area" id="challenges" data-area="challenges">
+        <section class="page-hero" data-reveal><p class="kicker">desafios e diversão</p><h1>Nossos <span class="highlight">desafios.</span></h1><p>Quiz e caça-palavras funcionais, com progresso e conquistas guardados neste navegador.</p></section>
+        <section class="quiz-shell" data-reveal>
+          <div class="quiz-panel" data-quiz-root><p class="kicker">quiz</p><div class="quiz-progress" data-quiz-progress>Questão 1 de 3</div><h2 class="quiz-question" data-question></h2><div class="quiz-options" data-options></div><div class="quiz-status" data-quiz-status aria-live="polite">Responda e veja como foi.</div><div class="inline-actions" style="margin-top:18px"><button class="primary-button" type="button" data-next disabled>Próxima</button><button class="secondary-button" type="button" data-reset-quiz>Reiniciar</button></div><div class="quiz-score" data-score>Pontuação: 0/3</div><div class="quiz-status" data-quiz-result hidden></div></div>
+          <aside class="achievements-panel"><p class="kicker">conquistas</p><div class="achievement-list"><div class="badge-card" data-achievement="quiz-completo"><div class="badge-text"><div class="badge-icon">✓</div><div><strong>Quiz completo</strong><br /><span class="badge-status">Bloqueada</span></div></div></div><div class="badge-card" data-achievement="palavras-completas"><div class="badge-text"><div class="badge-icon">✦</div><div><strong>Caça-palavras concluído</strong><br /><span class="badge-status">Bloqueada</span></div></div></div></div></aside>
+        </section>
+        <section class="word-game-shell" data-reveal><div class="word-panel" data-word-search><p class="kicker">caça-palavras</p><h3>Encontre as palavras do carinho</h3><div class="word-grid" data-grid></div><div class="word-list" data-word-list></div><div class="quiz-status" data-word-progress aria-live="polite">0/5 palavras encontradas</div><div class="hidden-message" data-final-message hidden>Desafio concluído — todas as palavras foram encontradas! ♡</div><div class="inline-actions" style="margin-top:18px"><button class="secondary-button" type="button" data-reset-word-search>Recomeçar</button></div></div></section>
       </section>
     </main>
 
     <footer class="rodape">
       <p>Feito com carinho, pensando em você ♡</p>
-      <p>Uma história que ainda tem muitos capítulos.</p>
+      <div class="global-audio" id="audio-controls" data-global-audio>
+        <audio data-audio-player preload="none"></audio>
+        <div class="audio-heading"><span class="equalizer" aria-hidden="true"><i></i><i></i><i></i></span><span>The Time (Dirty Bit) — Black Eyed Peas</span></div>
+        <div class="audio-controls"><button type="button" data-audio-toggle aria-label="Tocar música">▶</button><label class="volume-control">Volume <input type="range" min="0" max="1" step="0.05" value="0.55" data-audio-volume aria-label="Volume da música" /></label></div>
+        <p class="audio-status" data-audio-status aria-live="polite">Trilha opcional: configure um arquivo autorizado para ativar a reprodução contínua.</p>
+        <a href="https://open.spotify.com/search/The%20Time%20(Dirty%20Bit)%20Black%20Eyed%20Peas" target="_blank" rel="noopener noreferrer">Abrir busca no Spotify (player externo)</a>
+      </div>
     </footer>
   </div>
 </body>

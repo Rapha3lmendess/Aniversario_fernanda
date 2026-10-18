@@ -1,10 +1,17 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
+  initLegacyRouteRedirect();
   initTheme();
   initMenu();
+  initSectionNavigation();
+  initCinematicIntro();
+  initIntroParallax();
+  initGlobalAudio();
+  initRelationshipCounter();
   initReveal();
   initGalleryThumbs();
   initGalleryModal();
   initLetterCards();
+  initEnvelopeCards();
   initQuiz();
   initWordSearch();
   initAchievements();
@@ -12,6 +19,28 @@
   initParticles();
   initPointerGlow();
 });
+
+document.addEventListener('visibilitychange', () => {
+  document.body.classList.toggle('page-hidden', document.hidden);
+});
+
+function initLegacyRouteRedirect() {
+  const legacyRoutes = {
+    'historia.html': '#universe',
+    'galeria.html': '#universe',
+    'futuro.html': '#universe',
+    'cartas.html': '#letters',
+    'surpresa.html': '#letters',
+    'roblox.html': '#gamer',
+    'jogos.html': '#challenges',
+    'trilha-sonora.html': '#universe'
+  };
+  const file = window.location.pathname.split('/').pop();
+  const target = legacyRoutes[file];
+  if (target && window.location.pathname.toLowerCase().includes('/paginas/')) {
+    window.location.replace(`../index.html${target}`);
+  }
+}
 
 function initTheme() {
   const saved = localStorage.getItem('princesa-tema');
@@ -37,25 +66,224 @@ function initMenu() {
   const toggle = document.querySelector('.menu-toggle');
   const panel = document.querySelector('.menu-panel');
   if (!toggle || !panel) return;
-  const closeMenu = () => { panel.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
+  const closeMenu = (restoreFocus = false) => {
+    panel.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Abrir navegação');
+    if (restoreFocus) toggle.focus();
+  };
   toggle.setAttribute('aria-expanded', 'false');
   toggle.addEventListener('click', () => {
     const isOpen = panel.classList.toggle('open');
     toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Fechar navegação' : 'Abrir navegação');
   });
   document.addEventListener('click', (event) => {
     if (!toggle.contains(event.target) && !panel.contains(event.target)) closeMenu();
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMenu();
+    if (event.key === 'Escape') closeMenu(true);
   });
-  const current = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.menu-link').forEach((link) => {
-    const href = (link.getAttribute('href') || '').split('/').pop();
-    if (href === current) {
-      link.classList.add('pagina-atual');
-      link.setAttribute('aria-current', 'page');
+  panel.querySelectorAll('a, [data-theme-menu-toggle], [data-audio-menu-toggle]').forEach((link) => link.addEventListener('click', () => closeMenu()));
+  panel.querySelector('[data-theme-menu-toggle]')?.addEventListener('click', () => document.querySelector('.theme-toggle')?.click());
+}
+
+function initSectionNavigation() {
+  const sections = Array.from(document.querySelectorAll('[data-area]'));
+  const links = document.querySelectorAll('.menu-link[href^="#"]');
+  if (!sections.length || !links.length) return;
+  const activate = (id) => {
+    links.forEach((link) => {
+      const active = link.getAttribute('href') === `#${id}`;
+      link.classList.toggle('pagina-atual', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  };
+  const currentHash = window.location.hash.slice(1);
+  activate(sections.some((section) => section.id === currentHash) ? currentHash : sections[0].id);
+  window.addEventListener('hashchange', () => {
+    const id = window.location.hash.slice(1);
+    if (sections.some((section) => section.id === id)) activate(id);
+  });
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) activate(visible.target.id);
+  }, { rootMargin: '-22% 0px -58% 0px', threshold: [0, 0.2, 0.5] });
+  sections.forEach((section) => observer.observe(section));
+}
+
+function initCinematicIntro() {
+  const intro = document.querySelector('[data-cinematic-intro]');
+  if (!intro) return;
+  const key = 'princesa-intro-completa';
+  const enterButton = intro.querySelector('[data-enter-universe]');
+  const skipButton = intro.querySelector('[data-skip-intro]');
+  const message = intro.querySelector('[data-intro-message]');
+  const pageShell = document.querySelector('.page-shell');
+  if (sessionStorage.getItem(key)) return;
+
+  intro.hidden = false;
+  requestAnimationFrame(() => intro.classList.add('visible'));
+  const text = 'Preparei um universo inteiro para a pessoa mais especial da minha vida.';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (message) {
+    if (reducedMotion) {
+      message.textContent = text;
+    } else {
+      let index = 0;
+      const typeNext = () => {
+        if (index >= text.length) return;
+        message.textContent += text[index];
+        index += 1;
+        window.setTimeout(typeNext, 34);
+      };
+      window.setTimeout(typeNext, 450);
     }
+  }
+
+  const finish = (startMusic, animateEntry = false) => {
+    if (intro.classList.contains('leaving')) return;
+    const shouldAnimateEntry = animateEntry && !reducedMotion;
+    sessionStorage.setItem(key, '1');
+    if (startMusic) {
+      const audioToggle = document.querySelector('[data-audio-toggle]');
+      if (audioToggle) audioToggle.click();
+    }
+    if (shouldAnimateEntry) intro.classList.add('launching');
+    intro.classList.add('leaving');
+    const duration = reducedMotion ? 0 : shouldAnimateEntry ? 1250 : 750;
+    window.setTimeout(() => {
+      intro.hidden = true;
+      if (shouldAnimateEntry && pageShell) {
+        pageShell.classList.add('universe-arriving');
+        const clearArrival = (event) => {
+          if (event.target !== pageShell) return;
+          pageShell.classList.remove('universe-arriving');
+          pageShell.removeEventListener('animationend', clearArrival);
+        };
+        pageShell.addEventListener('animationend', clearArrival);
+      }
+    }, duration);
+  };
+  enterButton?.addEventListener('click', () => finish(true, true));
+  skipButton?.addEventListener('click', () => finish(false));
+}
+
+function initIntroParallax() {
+  const intro = document.querySelector('[data-cinematic-intro]');
+  if (!intro || window.matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) return;
+  let frame = 0;
+  let x = 0;
+  let y = 0;
+  intro.addEventListener('pointermove', (event) => {
+    x = (event.clientX / window.innerWidth - 0.5) * 8;
+    y = (event.clientY / window.innerHeight - 0.5) * 8;
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      intro.style.setProperty('--parallax-x', `${x}px`);
+      intro.style.setProperty('--parallax-y', `${y}px`);
+      frame = 0;
+    });
+  });
+}
+
+function initGlobalAudio() {
+  const root = document.querySelector('[data-global-audio]');
+  if (!root) return;
+  const audio = root.querySelector('[data-audio-player]');
+  const toggle = root.querySelector('[data-audio-toggle]');
+  const volume = root.querySelector('[data-audio-volume]');
+  const status = root.querySelector('[data-audio-status]');
+  const menuToggle = document.querySelector('[data-audio-menu-toggle]');
+  const menuStatus = document.querySelector('[data-audio-menu-status]');
+  if (!audio || !toggle || !volume || !status) return;
+  const source = document.body.dataset.audioSrc.trim();
+  const savedVolume = localStorage.getItem('princesa-volume');
+  volume.value = savedVolume === null ? '0.55' : savedVolume;
+  audio.volume = Number(volume.value);
+  if (source) audio.src = source;
+  else status.textContent = 'Trilha indisponível: adicione um arquivo autorizado no atributo data-audio-src.';
+
+  const setStatus = (text, error = false) => {
+    status.textContent = text;
+    status.classList.toggle('audio-error', error);
+  };
+  const updateMenuStatus = (playing) => {
+    if (menuStatus) menuStatus.textContent = playing ? 'Pausar reprodução' : source ? 'Reproduzir ou pausar' : 'Configure uma faixa local';
+    if (menuToggle) menuToggle.setAttribute('aria-label', playing ? 'Pausar trilha sonora' : 'Reproduzir trilha sonora');
+  };
+  updateMenuStatus(false);
+  audio.addEventListener('playing', () => {
+    toggle.textContent = 'Ⅱ';
+    toggle.setAttribute('aria-label', 'Pausar música');
+    root.classList.add('is-playing');
+    updateMenuStatus(true);
+    setStatus('Reproduzindo no nosso universo.');
+  });
+  audio.addEventListener('pause', () => {
+    toggle.textContent = '▶';
+    toggle.setAttribute('aria-label', 'Retomar música');
+    root.classList.remove('is-playing');
+    updateMenuStatus(false);
+    if (source) setStatus('Trilha pausada.');
+  });
+  audio.addEventListener('error', () => {
+    root.classList.remove('is-playing');
+    updateMenuStatus(false);
+    setStatus('Não foi possível carregar a faixa. Confira o arquivo e use ▶ para tentar novamente.', true);
+  });
+  toggle.addEventListener('click', async () => {
+    if (!audio.src) {
+      setStatus('Música não configurada. Adicione um arquivo autorizado em data-audio-src para ativar.', true);
+      return;
+    }
+    if (!audio.paused) {
+      audio.pause();
+      return;
+    }
+    try {
+      await audio.play();
+    } catch {
+      setStatus('A reprodução não pôde começar. Confira a faixa e tente novamente.', true);
+    }
+  });
+  menuToggle?.addEventListener('click', () => toggle.click());
+  volume.addEventListener('input', () => {
+    audio.volume = Number(volume.value);
+    localStorage.setItem('princesa-volume', volume.value);
+  });
+}
+
+function initRelationshipCounter() {
+  const counter = document.querySelector('[data-relationship-counter]');
+  if (!counter) return;
+  const startValue = counter.dataset.relationshipStart.trim();
+  const daysElement = counter.querySelector('[data-counter-days]');
+  const message = counter.querySelector('[data-counter-message]');
+  const startDate = new Date(`${startValue}T00:00:00`);
+  if (!startValue || Number.isNaN(startDate.getTime())) return;
+  const days = Math.max(0, Math.floor((Date.now() - startDate.getTime()) / 86400000));
+  if (daysElement) daysElement.textContent = days.toLocaleString('pt-BR');
+  if (message) message.textContent = 'Cada dia é mais uma parte da nossa história.';
+}
+
+function initEnvelopeCards() {
+  document.querySelectorAll('.envelope-card .letter-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.envelope-card');
+      if (!card) return;
+      card.classList.toggle('envelope-open', button.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+  const button = document.querySelector('[data-reveal-message]');
+  const message = document.querySelector('[data-final-surprise]');
+  button?.addEventListener('click', () => {
+    if (!message) return;
+    const revealed = message.classList.toggle('show');
+    button.textContent = revealed ? 'Esconder surpresa' : 'Revelar surpresa';
+    button.setAttribute('aria-expanded', String(revealed));
   });
 }
 
@@ -78,11 +306,13 @@ function initReveal() {
 }
 
 function initGalleryThumbs() {
+  const initializedAreas = new Set();
   document.querySelectorAll('[data-photo-src], [data-gallery-src]').forEach((item) => {
-    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame')
+    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame, .avatar-portrait')
       ? item
-      : item.querySelector('.thumb');
-    if (!photoArea) return;
+      : item.querySelector('.thumb, .photo-placeholder, .avatar-portrait');
+    if (!photoArea || initializedAreas.has(photoArea)) return;
+    initializedAreas.add(photoArea);
     const image = document.createElement('img');
     image.alt = item.dataset.galleryTitle || item.dataset.photoAlt || 'Foto';
     image.loading = 'lazy';
@@ -168,6 +398,7 @@ function initQuiz() {
   let current = 0, score = 0;
   const questionEl = root.querySelector('[data-question]');
   const optionsEl = root.querySelector('[data-options]');
+  const progressEl = root.querySelector('[data-quiz-progress]');
   const statusEl = root.querySelector('[data-quiz-status]');
   const resultEl = root.querySelector('[data-quiz-result]');
   const scoreEl = root.querySelector('[data-score]');
@@ -175,6 +406,7 @@ function initQuiz() {
   const resetBtn = root.querySelector('[data-reset-quiz]');
   const renderQuestion = () => {
     const item = questions[current];
+    if (progressEl) progressEl.textContent = `Questão ${current + 1} de ${questions.length}`;
     questionEl.textContent = item.q;
     optionsEl.innerHTML = '';
     nextBtn.disabled = true;
@@ -203,18 +435,17 @@ function initQuiz() {
     current += 1;
     if (current < questions.length) { renderQuestion(); return; }
     questionEl.textContent = 'Resultado final';
+    if (progressEl) progressEl.textContent = 'Quiz concluído';
     optionsEl.innerHTML = '';
     statusEl.textContent = `Você acertou ${score} de ${questions.length}.`;
     resultEl.hidden = false;
     resultEl.textContent = score === questions.length ? 'Perfeito — seu coração está bem afinado!' : 'Ainda há muito para explorar juntos!';
     scoreEl.textContent = `Pontuação: ${score}/${questions.length}`;
     nextBtn.style.display = 'none';
-    if (score > 0) {
-      unlockAchievement('quiz-completo');
-    }
+    unlockAchievement('quiz-completo');
   });
   resetBtn.addEventListener('click', () => {
-    current = 0; score = 0; nextBtn.style.display = 'inline-flex'; scoreEl.textContent = 'Pontuação: 0/3'; statusEl.textContent = 'Responda e veja como a conexão está.'; resultEl.hidden = true; renderQuestion();
+    current = 0; score = 0; nextBtn.style.display = 'inline-flex'; scoreEl.textContent = 'Pontuação: 0/3'; statusEl.textContent = 'Responda e veja como foi.'; resultEl.hidden = true; renderQuestion();
   });
   renderQuestion();
 }
@@ -224,39 +455,56 @@ function initWordSearch() {
   if (!root) return;
   const words = ['AMOR', 'BEIJO', 'PRINCESA', 'CARINHO', 'SAUDADE'];
   const size = 8;
-  const grid = Array.from({ length: size }, () => Array(size).fill(''));
   const directions = [[0,1],[1,0],[1,1],[1,-1],[0,-1],[-1,0],[-1,-1],[-1,1]];
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  words.forEach((word) => {
-    let placed = false;
-    while (!placed) {
-      const [dr, dc] = directions[Math.floor(Math.random() * directions.length)];
-      const row = Math.floor(Math.random() * size);
-      const col = Math.floor(Math.random() * size);
-      const endRow = row + (word.length - 1) * dr;
-      const endCol = col + (word.length - 1) * dc;
-      if (endRow < 0 || endRow >= size || endCol < 0 || endCol >= size) continue;
-      let valid = true;
-      for (let i = 0; i < word.length; i++) {
-        const r = row + i * dr; const c = col + i * dc;
-        if (grid[r][c] && grid[r][c] !== word[i]) { valid = false; break; }
+  const makeGrid = () => {
+    for (let boardAttempt = 0; boardAttempt < 12; boardAttempt++) {
+      const candidate = Array.from({ length: size }, () => Array(size).fill(''));
+      let allPlaced = true;
+      for (const word of words) {
+        let placed = false;
+        for (let attempt = 0; attempt < 700 && !placed; attempt++) {
+          const [dr, dc] = directions[Math.floor(Math.random() * directions.length)];
+          const row = Math.floor(Math.random() * size);
+          const col = Math.floor(Math.random() * size);
+          const endRow = row + (word.length - 1) * dr;
+          const endCol = col + (word.length - 1) * dc;
+          if (endRow < 0 || endRow >= size || endCol < 0 || endCol >= size) continue;
+          let valid = true;
+          for (let i = 0; i < word.length; i++) {
+            const r = row + i * dr; const c = col + i * dc;
+            if (candidate[r][c] && candidate[r][c] !== word[i]) { valid = false; break; }
+          }
+          if (!valid) continue;
+          for (let i = 0; i < word.length; i++) {
+            candidate[row + i * dr][col + i * dc] = word[i];
+          }
+          placed = true;
+        }
+        if (!placed) {
+          allPlaced = false;
+          break;
+        }
       }
-      if (!valid) continue;
-      for (let i = 0; i < word.length; i++) {
-        grid[row + i * dr][col + i * dc] = word[i];
+      if (allPlaced) {
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            if (!candidate[r][c]) candidate[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+          }
+        }
+        return candidate;
       }
-      placed = true;
     }
-  });
-
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      if (!grid[r][c]) {
-        grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+    const fallback = Array.from({ length: size }, () => Array(size).fill(''));
+    words.forEach((word, row) => [...word].forEach((letter, col) => { fallback[row][col] = letter; }));
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!fallback[r][c]) fallback[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
       }
     }
-  }
+    return fallback;
+  };
+  let grid = makeGrid();
 
   const gridEl = root.querySelector('[data-grid]');
   const listEl = root.querySelector('[data-word-list]');
@@ -264,14 +512,6 @@ function initWordSearch() {
   const finalText = root.querySelector('[data-final-message]');
   const found = new Set();
   const selectedCells = [];
-
-  const isAdjacent = (cellA, cellB) => {
-    const rowA = Number(cellA.dataset.row);
-    const colA = Number(cellA.dataset.col);
-    const rowB = Number(cellB.dataset.row);
-    const colB = Number(cellB.dataset.col);
-    return Math.abs(rowA - rowB) <= 1 && Math.abs(colA - colB) <= 1 && !(rowA === rowB && colA === colB);
-  };
 
   const clearSelection = () => {
     selectedCells.forEach((cell) => cell.classList.remove('selected'));
@@ -318,17 +558,27 @@ function initWordSearch() {
             return;
           }
 
-          if (selectedCells.length > 0) {
-            const lastCell = selectedCells[selectedCells.length - 1];
-            if (!isAdjacent(lastCell, cell)) {
+          if (selectedCells.length === 1) {
+            const first = selectedCells[0];
+            const rowDelta = Number(cell.dataset.row) - Number(first.dataset.row);
+            const colDelta = Number(cell.dataset.col) - Number(first.dataset.col);
+            if (Math.abs(rowDelta) > 1 || Math.abs(colDelta) > 1 || (!rowDelta && !colDelta)) {
+              clearSelection();
+            }
+          } else if (selectedCells.length > 1) {
+            const first = selectedCells[0];
+            const second = selectedCells[1];
+            const rowDelta = Number(second.dataset.row) - Number(first.dataset.row);
+            const colDelta = Number(second.dataset.col) - Number(first.dataset.col);
+            const nextRow = Number(first.dataset.row) + rowDelta * selectedCells.length;
+            const nextCol = Number(first.dataset.col) + colDelta * selectedCells.length;
+            if (Number(cell.dataset.row) !== nextRow || Number(cell.dataset.col) !== nextCol) {
               clearSelection();
             }
           }
 
-          if (selectedCells.length === 0 || selectedCells[selectedCells.length - 1] !== cell) {
-            selectedCells.push(cell);
-            cell.classList.add('selected');
-          }
+          selectedCells.push(cell);
+          cell.classList.add('selected');
 
           const selectedWord = selectedCells.map((item) => item.textContent).join('');
           const match = words.find((word) => word === selectedWord || word === selectedWord.split('').reverse().join(''));
@@ -338,6 +588,7 @@ function initWordSearch() {
             matchedCells.forEach((item) => {
               item.classList.add('found');
               item.classList.remove('selected');
+              item.disabled = true;
             });
             found.add(match);
             selectedCells.length = 0;
@@ -345,7 +596,7 @@ function initWordSearch() {
             return;
           }
 
-          if (selectedCells.length >= Math.max(3, words[0].length)) {
+          if (selectedCells.length >= Math.max(3, ...words.map((word) => word.length))) {
             clearSelection();
           }
         });
@@ -356,6 +607,7 @@ function initWordSearch() {
   };
 
   root.querySelector('[data-reset-word-search]').addEventListener('click', () => {
+    grid = makeGrid();
     found.clear();
     clearSelection();
     renderBoard();
@@ -409,25 +661,44 @@ function initParticles() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
   let particles = [];
+  let animationFrame = 0;
+  let isVisible = !document.hidden;
+  let canvasWidth = 0;
+  let canvasHeight = 0;
   const resize = () => {
     const ratio = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * ratio;
-    canvas.height = window.innerHeight * ratio;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
+    canvasWidth = document.documentElement.clientWidth;
+    canvasHeight = window.innerHeight;
+    canvas.width = canvasWidth * ratio;
+    canvas.height = canvasHeight * ratio;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    particles = Array.from({ length: Math.min(65, Math.max(20, Math.floor(window.innerWidth / 22))) }, () => ({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, r: Math.random() * 2.2 + 1, vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35, alpha: Math.random() * 0.7 + 0.2 }));
+    const particleCount = window.matchMedia('(pointer: coarse)').matches ? 16 : Math.min(42, Math.max(14, Math.floor(canvasWidth / 36)));
+    particles = Array.from({ length: particleCount }, () => ({ x: Math.random() * canvasWidth, y: Math.random() * canvasHeight, r: Math.random() * 1.7 + 0.7, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, alpha: Math.random() * 0.55 + 0.15 }));
   };
   const draw = () => {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     particles.forEach((p) => {
-      p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1; if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
+      p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvasWidth) p.vx *= -1; if (p.y < 0 || p.y > canvasHeight) p.vy *= -1;
       ctx.beginPath(); ctx.fillStyle = `rgba(169, 216, 245, ${p.alpha})`; ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     });
-    requestAnimationFrame(draw);
+    animationFrame = isVisible ? requestAnimationFrame(draw) : 0;
   };
-  resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+  const updateVisibility = () => {
+    isVisible = !document.hidden;
+    if (isVisible && !animationFrame) animationFrame = requestAnimationFrame(draw);
+    if (!isVisible && animationFrame) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+    }
+  };
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', updateVisibility);
+  if (isVisible) animationFrame = requestAnimationFrame(draw);
 }
 
 function initPointerGlow() {
