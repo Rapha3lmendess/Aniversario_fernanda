@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogos e Desafios ♡</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/main.js" defer></script>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+  <div class="cursor-glow"></div>
+
+  <div class="page-shell">
+    <header class="cabecalho">
+      <a href="../index.html" class="logo">para minha princesa <span>♡</span></a>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" aria-label="Ativar tema claro">
+          <span class="sun-icon">☀</span>
+          <span class="moon-icon">☾</span>
+        </button>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="menu-panel" aria-label="Menu principal">
+          <a class="menu-link" href="../index.html"><span>Início</span><span class="menu-mark">01</span></a>
+          <a class="menu-link" href="historia.html"><span>Nossa história</span><span class="menu-mark">02</span></a>
+          <a class="menu-link" href="galeria.html"><span>Galeria</span><span class="menu-mark">03</span></a>
+          <a class="menu-link" href="cartas.html"><span>Cartas</span><span class="menu-mark">04</span></a>
+          <a class="menu-link" href="trilha-sonora.html"><span>Nossa trilha</span><span class="menu-mark">05</span></a>
+          <a class="menu-link" href="surpresa.html"><span>Surpresa</span><span class="menu-mark">06</span></a>
+          <a class="menu-link" href="futuro.html"><span>Nosso futuro</span><span class="menu-mark">07</span></a>
+          <a class="menu-link" href="jogos.html"><span>Jogos</span><span class="menu-mark">08</span></a>
+          <a class="menu-link" href="roblox.html"><span>Roblox</span><span class="menu-mark">09</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <section class="page-hero" data-reveal>
+        <p class="kicker">desafios e diversão</p>
+        <h1>Jogos para <span class="highlight">você.</span></h1>
+        <p>Uma área leve e divertida para testar a conexão, os gostos e a energia de uma história que vale a pena explorar com carinho.</p>
+      </section>
+
+      <section class="quiz-shell" data-reveal>
+        <div class="quiz-panel" data-quiz-root>
+          <p class="kicker">quiz</p>
+          <h2 class="quiz-question" data-question>Qual é a base mais importante de um relacionamento?</h2>
+          <div class="quiz-options" data-options></div>
+          <div class="quiz-status" data-quiz-status>Responda e veja como a conexão está.</div>
+          <div class="inline-actions" style="margin-top: 18px;">
+            <button class="primary-button" type="button" data-next>Próxima</button>
+            <button class="secondary-button" type="button" data-reset-quiz>Reiniciar</button>
+          </div>
+          <div class="quiz-score" data-score>Pontuação: 0/3</div>
+          <div class="quiz-status" data-quiz-result hidden></div>
+        </div>
+
+        <aside class="achievements-panel">
+          <p class="kicker">conquistas</p>
+          <div class="achievement-list">
+            <div class="badge-card" data-achievement="quiz-completo">
+              <div class="badge-text">
+                <div class="badge-icon">✓</div>
+                <div><strong>Quiz completo</strong><br /><span class="badge-status">Bloqueada</span></div>
+              </div>
+            </div>
+            <div class="badge-card" data-achievement="palavras-completas">
+              <div class="badge-text">
+                <div class="badge-icon">✦</div>
+                <div><strong>Palavras vencidas</strong><br /><span class="badge-status">Bloqueada</span></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="word-game-shell" data-reveal>
+        <div class="word-panel" data-word-search>
+          <p class="kicker">caça-palavras</p>
+          <h3>Encontre as palavras do carinho</h3>
+          <div class="word-grid" data-grid></div>
+          <div class="word-list" data-word-list></div>
+          <div class="quiz-status" data-word-progress>0/5 palavras encontradas</div>
+          <div class="hidden-message" data-final-message hidden>Você resolveu o desafio do amor: todas as palavras foram encontradas.</div>
+          <div class="inline-actions" style="margin-top: 18px;">
+            <button class="secondary-button" type="button" data-reset-word-search>Regerar</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="rodape">
+      <p>Pequenos desafios, grandes sorrisos. ♡</p>
+    </footer>
+  </div>
+</body>
+</html>
