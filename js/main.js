@@ -37,9 +37,7 @@ function initLegacyRouteRedirect() {
     'futuro.html': '#universe',
     'cartas.html': '#letters',
     'surpresa.html': '#letters',
-    'roblox.html': '#gamer',
-    'jogos.html': '#challenges',
-    'trilha-sonora.html': '#universe'
+    'jogos.html': '#challenges'
   };
   const file = window.location.pathname.split('/').pop();
   const target = legacyRoutes[file];
@@ -301,7 +299,7 @@ function initGlobalAudio() {
     toggle.textContent = 'Ⅱ';
     toggle.setAttribute('aria-label', 'Pausar música');
     root.classList.add('is-playing');
-    setStatus('Reproduzindo no nosso universo.');
+    setStatus('Reproduzindo nossa trilha sonora.');
   });
   audio.addEventListener('pause', () => {
     toggle.textContent = '▶';
@@ -423,6 +421,7 @@ function initGalleryThumbs() {
     image.alt = item.dataset.galleryTitle || item.dataset.photoAlt || 'Foto';
     image.loading = item.matches('.portrait-slide, .avatar-portrait')
       || Boolean(item.dataset.galleryTitle)
+      || Boolean(item.closest('.gamer-photos'))
       ? 'eager'
       : 'lazy';
     image.addEventListener('load', () => {

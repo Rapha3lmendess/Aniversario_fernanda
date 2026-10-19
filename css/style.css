@@ -289,6 +289,7 @@ body.theme-light .gallery-modal-panel { background: rgba(255,255,255,0.98); }
 .avatar-portrait span { position:relative; z-index:1; }
 .gamer-photos { margin-bottom:24px; }
 .gamer-notes { margin-top:28px; }
+.gamer-notes .story-card p + p { margin-top:12px; }
 .counter-panel { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px 30px; border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(120deg,rgba(169,216,245,.1),rgba(248,223,231,.08)); }
 .counter-panel > div { display:grid; gap:2px; }
 .counter-panel strong { font-family:Georgia,"Times New Roman",serif; font-size:clamp(2.6rem,6vw,4.5rem); line-height:1; color:var(--blue); }
