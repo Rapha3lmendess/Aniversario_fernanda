@@ -8,6 +8,7 @@
   <script src="../js/main.js" defer></script>
 </head>
 <body>
+  <!-- Rota antiga: main.js encaminha para a área de cartas e surpresas em index.html. -->
   <canvas id="particle-canvas"></canvas>
   <div class="cursor-glow"></div>
   <div class="page-shell">
@@ -29,6 +30,7 @@
         </nav>
       </div>
     </header>
+    <!-- Conteúdo legado mantido para referência; a versão ativa está em index.html. -->
     <main class="page-content">
       <section class="page-hero" data-reveal>
         <p class="kicker">guardei mais uma coisinha para você</p>
@@ -45,6 +47,7 @@
     </main>
     <footer class="rodape"><p>O melhor presente é continuar vivendo essa história com você. ♡</p></footer>
   </div>
+  <!-- Interação da página legada: alterna a visibilidade da mensagem surpresa. -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const button = document.querySelector('[data-reveal-message]');

@@ -1,4 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+// Inicializa apenas os recursos presentes na página depois que o HTML foi carregado.
+document.addEventListener('DOMContentLoaded', () => {
   initLegacyRouteRedirect();
   initTheme();
   initMenu();
@@ -23,10 +24,12 @@
   initPointerGlow();
 });
 
+// Pausa efeitos visuais quando a aba fica oculta para economizar recursos.
 document.addEventListener('visibilitychange', () => {
   document.body.classList.toggle('page-hidden', document.hidden);
 });
 
+// Mantém links antigos funcionando e leva cada página legada à seção equivalente do início.
 function initLegacyRouteRedirect() {
   const legacyRoutes = {
     'historia.html': '#universe',
@@ -45,6 +48,7 @@ function initLegacyRouteRedirect() {
   }
 }
 
+// Carrega a preferência de tema salva e sincroniza o botão claro/escuro.
 function initTheme() {
   const saved = localStorage.getItem('princesa-tema');
   const shouldLight = saved ? saved === 'light' : false;
@@ -65,6 +69,7 @@ function initTheme() {
   });
 }
 
+// Abre e fecha o menu principal; Escape e clique fora também o fecham.
 function initMenu() {
   const toggle = document.querySelector('.menu-toggle');
   const panel = document.querySelector('.menu-panel');
@@ -87,10 +92,10 @@ function initMenu() {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeMenu(true);
   });
-  panel.querySelectorAll('a, [data-theme-menu-toggle], [data-audio-menu-toggle]').forEach((link) => link.addEventListener('click', () => closeMenu()));
-  panel.querySelector('[data-theme-menu-toggle]')?.addEventListener('click', () => document.querySelector('.theme-toggle')?.click());
+  panel.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => closeMenu()));
 }
 
+// Marca no menu a seção que está visível e acompanha mudanças na âncora da URL.
 function initSectionNavigation() {
   const sections = Array.from(document.querySelectorAll('[data-area]'));
   const links = document.querySelectorAll('.menu-link[href^="#"]');
@@ -117,6 +122,7 @@ function initSectionNavigation() {
   sections.forEach((section) => observer.observe(section));
 }
 
+// Mostra a introdução animada uma vez por sessão e conduz à tela de aniversário.
 function initCinematicIntro() {
   const intro = document.querySelector('[data-cinematic-intro]');
   if (!intro) return;
@@ -132,6 +138,7 @@ function initCinematicIntro() {
 
   intro.hidden = false;
   requestAnimationFrame(() => intro.classList.add('visible'));
+  // Edite aqui a mensagem que aparece sendo escrita na introdução.
   const text = 'Preparei um universo inteiro para a pessoa mais especial da minha vida.';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (message) {
@@ -176,9 +183,14 @@ function initCinematicIntro() {
   skipButton?.addEventListener('click', () => finish(false));
 }
 
+// Prepara confetes, controla o áudio do aniversário e marca a tela como concluída.
 function initBirthdayWelcome() {
   const welcome = document.querySelector('[data-birthday-welcome]');
   const continueButton = welcome?.querySelector('[data-birthday-continue]');
+  const birthdayAudio = welcome?.querySelector('[data-birthday-audio]');
+  const birthdayAudioToggle = welcome?.querySelector('[data-birthday-audio-toggle]');
+  const birthdayAudioLabel = welcome?.querySelector('[data-birthday-audio-label]');
+  const birthdayAudioStatus = welcome?.querySelector('[data-birthday-audio-status]');
   const confetti = welcome?.querySelector('[data-birthday-confetti]');
   if (!welcome || !continueButton) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -199,14 +211,43 @@ function initBirthdayWelcome() {
     }
   }
 
+  const setBirthdayAudioState = (playing) => {
+    if (!birthdayAudioLabel || !birthdayAudioToggle) return;
+    birthdayAudioLabel.textContent = playing ? 'Pausar música' : 'Tocar música';
+    birthdayAudioToggle.setAttribute('aria-label', playing ? 'Pausar música de aniversário' : 'Tocar música de aniversário');
+    birthdayAudioToggle.setAttribute('aria-pressed', String(playing));
+    birthdayAudioStatus.textContent = playing ? 'Tocando para você ♡' : '';
+  };
+
+  birthdayAudioToggle?.addEventListener('click', () => {
+    if (!birthdayAudio) return;
+    if (birthdayAudio.paused) {
+      setBirthdayAudioState(true);
+      birthdayAudio.play().catch(() => {
+        setBirthdayAudioState(false);
+        birthdayAudioStatus.textContent = 'Não foi possível tocar o áudio. Confira o arquivo anime-fofo.mp3.';
+      });
+    } else {
+      birthdayAudio.pause();
+      setBirthdayAudioState(false);
+    }
+  });
+  birthdayAudio?.addEventListener('pause', () => setBirthdayAudioState(false));
+  birthdayAudio?.addEventListener('playing', () => setBirthdayAudioState(true));
+  birthdayAudio?.addEventListener('error', () => {
+    birthdayAudioStatus.textContent = 'Não foi possível carregar o áudio. Confira o arquivo anime-fofo.mp3.';
+  });
+
   continueButton.addEventListener('click', () => {
     sessionStorage.setItem('princesa-aniversario-completo', '1');
+    birthdayAudio?.pause();
     welcome.hidden = true;
     welcome.classList.remove('visible');
     document.querySelector('[data-audio-toggle]')?.click();
   });
 }
 
+// Exibe a tela de aniversário enquanto ela ainda não foi concluída nesta sessão.
 function showBirthdayWelcome() {
   const welcome = document.querySelector('[data-birthday-welcome]');
   if (!welcome || sessionStorage.getItem('princesa-aniversario-completo')) return;
@@ -217,6 +258,7 @@ function showBirthdayWelcome() {
   });
 }
 
+// Move as estrelas da introdução conforme o ponteiro, respeitando movimento reduzido.
 function initIntroParallax() {
   const intro = document.querySelector('[data-cinematic-intro]');
   if (!intro || window.matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) return;
@@ -235,6 +277,7 @@ function initIntroParallax() {
   });
 }
 
+// Configura o player persistente do rodapé, volume e mensagens de reprodução/erro.
 function initGlobalAudio() {
   const root = document.querySelector('[data-global-audio]');
   if (!root) return;
@@ -242,8 +285,6 @@ function initGlobalAudio() {
   const toggle = root.querySelector('[data-audio-toggle]');
   const volume = root.querySelector('[data-audio-volume]');
   const status = root.querySelector('[data-audio-status]');
-  const menuToggle = document.querySelector('[data-audio-menu-toggle]');
-  const menuStatus = document.querySelector('[data-audio-menu-status]');
   if (!audio || !toggle || !volume || !status) return;
   const source = document.body.dataset.audioSrc.trim();
   const savedVolume = localStorage.getItem('princesa-volume');
@@ -256,28 +297,20 @@ function initGlobalAudio() {
     status.textContent = text;
     status.classList.toggle('audio-error', error);
   };
-  const updateMenuStatus = (playing) => {
-    if (menuStatus) menuStatus.textContent = playing ? 'Pausar reprodução' : source ? 'Reproduzir ou pausar' : 'Configure uma faixa local';
-    if (menuToggle) menuToggle.setAttribute('aria-label', playing ? 'Pausar trilha sonora' : 'Reproduzir trilha sonora');
-  };
-  updateMenuStatus(false);
   audio.addEventListener('playing', () => {
     toggle.textContent = 'Ⅱ';
     toggle.setAttribute('aria-label', 'Pausar música');
     root.classList.add('is-playing');
-    updateMenuStatus(true);
     setStatus('Reproduzindo no nosso universo.');
   });
   audio.addEventListener('pause', () => {
     toggle.textContent = '▶';
     toggle.setAttribute('aria-label', 'Retomar música');
     root.classList.remove('is-playing');
-    updateMenuStatus(false);
     if (source) setStatus('Trilha pausada.');
   });
   audio.addEventListener('error', () => {
     root.classList.remove('is-playing');
-    updateMenuStatus(false);
     setStatus('Não foi possível carregar a faixa. Confira o arquivo e use ▶ para tentar novamente.', true);
   });
   toggle.addEventListener('click', async () => {
@@ -295,13 +328,13 @@ function initGlobalAudio() {
       setStatus('A reprodução não pôde começar. Confira a faixa e tente novamente.', true);
     }
   });
-  menuToggle?.addEventListener('click', () => toggle.click());
   volume.addEventListener('input', () => {
     audio.volume = Number(volume.value);
     localStorage.setItem('princesa-volume', volume.value);
   });
 }
 
+// Calcula quantos dias se passaram desde o início da história do casal.
 function initRelationshipCounter() {
   const counter = document.querySelector('[data-relationship-counter]');
   if (!counter) return;
@@ -315,6 +348,7 @@ function initRelationshipCounter() {
   if (message) message.textContent = 'Cada dia é mais uma parte da nossa história.';
 }
 
+// Calcula os dias de namoro e a distância até o primeiro aniversário.
 function initDatingCounter() {
   const counter = document.querySelector('[data-dating-counter]');
   if (!counter) return;
@@ -338,6 +372,7 @@ function initDatingCounter() {
   }
 }
 
+// Abre e fecha cartas em formato de envelope e revela a surpresa final.
 function initEnvelopeCards() {
   document.querySelectorAll('.envelope-card .letter-toggle').forEach((button) => {
     button.addEventListener('click', () => {
@@ -356,6 +391,7 @@ function initEnvelopeCards() {
   });
 }
 
+// Revela elementos quando entram na área visível da tela.
 function initReveal() {
   const items = document.querySelectorAll('[data-reveal]');
   if (!items.length) return;
@@ -374,17 +410,21 @@ function initReveal() {
   items.forEach((item) => observer.observe(item));
 }
 
+// Carrega fotos locais nas molduras que declaram data-photo-src/data-gallery-src.
 function initGalleryThumbs() {
   const initializedAreas = new Set();
   document.querySelectorAll('[data-photo-src], [data-gallery-src]').forEach((item) => {
-    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame, .portrait-slide, .avatar-portrait')
+    const photoArea = item.matches('.photo-placeholder, .canva-image, .portrait-frame, .portrait-slide, .avatar-portrait, .wallpaper-preview')
       ? item
       : item.querySelector('.thumb, .photo-placeholder, .avatar-portrait');
     if (!photoArea || initializedAreas.has(photoArea)) return;
     initializedAreas.add(photoArea);
     const image = document.createElement('img');
     image.alt = item.dataset.galleryTitle || item.dataset.photoAlt || 'Foto';
-    image.loading = 'lazy';
+    image.loading = item.matches('.portrait-slide, .avatar-portrait')
+      || Boolean(item.dataset.galleryTitle)
+      ? 'eager'
+      : 'lazy';
     image.addEventListener('load', () => {
       const placeholder = photoArea.querySelector('span');
       if (placeholder) placeholder.hidden = true;
@@ -395,6 +435,7 @@ function initGalleryThumbs() {
   });
 }
 
+// Controla troca de fotos, indicadores e rótulo do carrossel de favoritas.
 function initFavoritePhotoCarousel() {
   document.querySelectorAll('[data-favorite-carousel]').forEach((carousel) => {
     const slides = [...carousel.querySelectorAll('.portrait-slide')];
@@ -434,17 +475,25 @@ function initFavoritePhotoCarousel() {
   });
 }
 
+// Abre imagens ou vídeos em tela ampliada e limpa a mídia ao fechar.
 function initGalleryModal() {
   const modal = document.querySelector('[data-gallery-modal]');
   if (!modal) return;
   const art = modal.querySelector('.gallery-modal-placeholder');
   const image = modal.querySelector('[data-gallery-image]');
+  const video = modal.querySelector('[data-gallery-video-player]');
   const close = () => {
     modal.classList.remove('open');
     if (image) {
       image.hidden = true;
       image.removeAttribute('src');
       image.onerror = null;
+    }
+    if (video) {
+      video.pause();
+      video.hidden = true;
+      video.removeAttribute('src');
+      video.load();
     }
     if (art) art.hidden = false;
   };
@@ -465,7 +514,20 @@ function initGalleryModal() {
       }
       if (title) title.textContent = item.dataset.galleryTitle || 'Lembrança';
       if (text) text.textContent = item.dataset.galleryText || 'Uma lembrança especial para guardar para sempre.';
-      if (image && item.dataset.gallerySrc) {
+      if (item.dataset.galleryType === 'video' && video && item.dataset.galleryVideo) {
+        if (image) {
+          image.hidden = true;
+          image.removeAttribute('src');
+        }
+        video.src = item.dataset.galleryVideo;
+        video.hidden = false;
+        if (art) art.hidden = true;
+      } else if (image && item.dataset.gallerySrc) {
+        if (video) {
+          video.pause();
+          video.hidden = true;
+          video.removeAttribute('src');
+        }
         image.hidden = false;
         image.src = item.dataset.gallerySrc;
         image.alt = item.dataset.galleryTitle || 'Foto da galeria';
@@ -482,6 +544,7 @@ function initGalleryModal() {
   });
 }
 
+// Liga os botões de abrir/fechar das cartas.
 function initLetterCards() {
   document.querySelectorAll('.letter-card').forEach((card) => {
     const toggle = card.querySelector('.letter-toggle');
@@ -495,9 +558,11 @@ function initLetterCards() {
   });
 }
 
+// Monta o quiz, valida respostas, calcula pontuação e libera a conquista.
 function initQuiz() {
   const root = document.querySelector('[data-quiz-root]');
   if (!root) return;
+  // Edite perguntas, alternativas, índice da resposta certa e feedback neste bloco.
   const questions = [
     { q: 'Qual é a base mais importante de um relacionamento?', options: ['Respeito', 'Pressa', 'Silêncio', 'Fugir do problema'], answer: 0, feedback: 'Respeito cria segurança e confiança.' },
     { q: 'O que torna uma lembrança especial?', options: ['O sentimento nela', 'A quantidade de fotos', 'A velocidade', 'A perfeição'], answer: 0, feedback: 'Memórias ficam marcadas pelo que tocam o coração.' },
@@ -558,9 +623,11 @@ function initQuiz() {
   renderQuestion();
 }
 
+// Gera a grade do caça-palavras e permite selecionar letras por clique ou arraste.
 function initWordSearch() {
   const root = document.querySelector('[data-word-search]');
   if (!root) return;
+  // Edite aqui as palavras que aparecem no caça-palavras.
   const words = ['AMOR', 'BEIJO', 'PRINCESA', 'CARINHO', 'SAUDADE'];
   const size = 8;
   const directions = [[0,1],[1,0],[1,1],[1,-1],[0,-1],[-1,0],[-1,-1],[-1,1]];
@@ -620,10 +687,93 @@ function initWordSearch() {
   const finalText = root.querySelector('[data-final-message]');
   const found = new Set();
   const selectedCells = [];
+  let activePointer = null;
+  let pointerStart = null;
+  let isDragging = false;
+  let suppressClick = false;
 
   const clearSelection = () => {
     selectedCells.forEach((cell) => cell.classList.remove('selected'));
     selectedCells.length = 0;
+  };
+
+  const completeSelection = () => {
+    const selectedWord = selectedCells.map((cell) => cell.textContent).join('');
+    const reversedWord = selectedWord.split('').reverse().join('');
+    const match = words.find((word) => word === selectedWord || word === reversedWord);
+    if (!match) return false;
+
+    selectedCells.forEach((cell) => {
+      cell.classList.add('found');
+      cell.classList.remove('selected');
+      cell.disabled = true;
+    });
+    found.add(match);
+    selectedCells.length = 0;
+    renderList();
+    return true;
+  };
+
+  const selectCell = (cell) => {
+    if (cell.disabled) return;
+    const selectedIndex = selectedCells.indexOf(cell);
+    if (selectedIndex !== -1) {
+      if (selectedIndex === selectedCells.length - 1) {
+        cell.classList.remove('selected');
+        selectedCells.pop();
+      } else {
+        clearSelection();
+      }
+      return;
+    }
+
+    if (selectedCells.length === 1) {
+      const first = selectedCells[0];
+      const rowDelta = Number(cell.dataset.row) - Number(first.dataset.row);
+      const colDelta = Number(cell.dataset.col) - Number(first.dataset.col);
+      if (Math.abs(rowDelta) > 1 || Math.abs(colDelta) > 1 || (!rowDelta && !colDelta)) {
+        clearSelection();
+      }
+    } else if (selectedCells.length > 1) {
+      const first = selectedCells[0];
+      const second = selectedCells[1];
+      const rowDelta = Number(second.dataset.row) - Number(first.dataset.row);
+      const colDelta = Number(second.dataset.col) - Number(first.dataset.col);
+      const nextRow = Number(first.dataset.row) + rowDelta * selectedCells.length;
+      const nextCol = Number(first.dataset.col) + colDelta * selectedCells.length;
+      if (Number(cell.dataset.row) !== nextRow || Number(cell.dataset.col) !== nextCol) {
+        clearSelection();
+      }
+    }
+
+    selectedCells.push(cell);
+    cell.classList.add('selected');
+    if (completeSelection()) return;
+    if (selectedCells.length >= Math.max(3, ...words.map((word) => word.length))) clearSelection();
+  };
+
+  const selectDragRange = (start, end) => {
+    const rowDelta = Number(end.dataset.row) - Number(start.dataset.row);
+    const colDelta = Number(end.dataset.col) - Number(start.dataset.col);
+    const rowDistance = Math.abs(rowDelta);
+    const colDistance = Math.abs(colDelta);
+    if (!rowDelta && !colDelta) return;
+    if (rowDelta && colDelta && rowDistance !== colDistance) return;
+
+    const rowStep = Math.sign(rowDelta);
+    const colStep = Math.sign(colDelta);
+    const steps = Math.max(rowDistance, colDistance);
+    clearSelection();
+    for (let step = 0; step <= steps; step++) {
+      const cell = gridEl.querySelector(`[data-row="${Number(start.dataset.row) + rowStep * step}"][data-col="${Number(start.dataset.col) + colStep * step}"]`);
+      if (!cell || cell.disabled) {
+        clearSelection();
+        return;
+      }
+      selectedCells.push(cell);
+      cell.classList.add('selected');
+    }
+    completeSelection();
   };
 
   const renderList = () => {
@@ -658,61 +808,53 @@ function initWordSearch() {
         cell.dataset.col = String(c);
         cell.textContent = grid[r][c];
 
-        cell.addEventListener('click', () => {
-          const isSelected = selectedCells.includes(cell);
-          if (isSelected) {
-            cell.classList.remove('selected');
-            selectedCells.splice(selectedCells.indexOf(cell), 1);
-            return;
-          }
-
-          if (selectedCells.length === 1) {
-            const first = selectedCells[0];
-            const rowDelta = Number(cell.dataset.row) - Number(first.dataset.row);
-            const colDelta = Number(cell.dataset.col) - Number(first.dataset.col);
-            if (Math.abs(rowDelta) > 1 || Math.abs(colDelta) > 1 || (!rowDelta && !colDelta)) {
-              clearSelection();
-            }
-          } else if (selectedCells.length > 1) {
-            const first = selectedCells[0];
-            const second = selectedCells[1];
-            const rowDelta = Number(second.dataset.row) - Number(first.dataset.row);
-            const colDelta = Number(second.dataset.col) - Number(first.dataset.col);
-            const nextRow = Number(first.dataset.row) + rowDelta * selectedCells.length;
-            const nextCol = Number(first.dataset.col) + colDelta * selectedCells.length;
-            if (Number(cell.dataset.row) !== nextRow || Number(cell.dataset.col) !== nextCol) {
-              clearSelection();
-            }
-          }
-
-          selectedCells.push(cell);
-          cell.classList.add('selected');
-
-          const selectedWord = selectedCells.map((item) => item.textContent).join('');
-          const match = words.find((word) => word === selectedWord || word === selectedWord.split('').reverse().join(''));
-
-          if (match) {
-            const matchedCells = [...selectedCells];
-            matchedCells.forEach((item) => {
-              item.classList.add('found');
-              item.classList.remove('selected');
-              item.disabled = true;
-            });
-            found.add(match);
-            selectedCells.length = 0;
-            renderList();
-            return;
-          }
-
-          if (selectedCells.length >= Math.max(3, ...words.map((word) => word.length))) {
-            clearSelection();
-          }
-        });
-
         gridEl.appendChild(cell);
       }
     }
   };
+
+  gridEl.addEventListener('pointerdown', (event) => {
+    const cell = event.target.closest('.word-cell');
+    if (!cell || cell.disabled || !event.isPrimary) return;
+    activePointer = event.pointerId;
+    pointerStart = cell;
+    isDragging = false;
+  });
+
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== activePointer || !pointerStart) return;
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.word-cell');
+    if (!target || !gridEl.contains(target) || target === pointerStart) return;
+    isDragging = true;
+    selectDragRange(pointerStart, target);
+  });
+
+  const finishPointer = (event) => {
+    if (event.pointerId !== activePointer) return;
+    if (isDragging) {
+      suppressClick = true;
+      window.setTimeout(() => { suppressClick = false; }, 0);
+    }
+    activePointer = null;
+    pointerStart = null;
+    isDragging = false;
+  };
+  document.addEventListener('pointerup', finishPointer);
+  document.addEventListener('pointercancel', (event) => {
+    if (event.pointerId !== activePointer) return;
+    clearSelection();
+    finishPointer(event);
+  });
+  gridEl.addEventListener('click', (event) => {
+    if (suppressClick) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      suppressClick = false;
+      return;
+    }
+    const cell = event.target.closest('.word-cell');
+    if (cell) selectCell(cell);
+  }, true);
 
   root.querySelector('[data-reset-word-search]').addEventListener('click', () => {
     grid = makeGrid();
@@ -726,6 +868,7 @@ function initWordSearch() {
   renderList();
 }
 
+// Salva uma conquista no navegador e atualiza seu selo na página atual.
 function unlockAchievement(key) {
   const saved = JSON.parse(localStorage.getItem('princesa-achievements') || '{}');
   saved[key] = true;
@@ -737,6 +880,7 @@ function unlockAchievement(key) {
   if (status) status.textContent = 'Desbloqueada';
 }
 
+// Restaura do armazenamento local o estado visual de cada conquista.
 function initAchievements() {
   const badges = document.querySelectorAll('[data-achievement]');
   if (!badges.length) return;
@@ -750,6 +894,7 @@ function initAchievements() {
   });
 }
 
+// Mantém a lista de jogos favoritos sincronizada com o armazenamento local.
 function initFavoriteButtons() {
   document.querySelectorAll('[data-favorite-game]').forEach((button) => {
     const key = button.dataset.favoriteGame;
@@ -765,6 +910,7 @@ function initFavoriteButtons() {
   });
 }
 
+// Desenha partículas leves no fundo e interrompe a animação com a aba oculta.
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -809,6 +955,7 @@ function initParticles() {
   if (isVisible) animationFrame = requestAnimationFrame(draw);
 }
 
+// Acompanha o ponteiro com um brilho decorativo apenas em dispositivos precisos.
 function initPointerGlow() {
   const glow = document.querySelector('.cursor-glow');
   if (!glow || window.matchMedia('(pointer: coarse)').matches) return;

@@ -9,11 +9,14 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/main.js" defer></script>
 </head>
-<!-- Configure data-audio-src somente com um arquivo de áudio autorizado. -->
+<!-- Personalize o áudio principal alterando o caminho em data-audio-src. -->
 <body data-audio-src="assets/audio/SIM, EU VOU.mp3">
+  <!-- Camada decorativa animada pelo JavaScript; não contém conteúdo editável. -->
   <canvas id="particle-canvas"></canvas>
   <div class="cursor-glow"></div>
 
+  <!-- Edite aqui os textos da introdução: chamada, título, mensagem e botões. -->
+  <!-- Tela inicial animada. Edite as mensagens e botões aqui; a animação fica em main.js. -->
   <section class="cinematic-intro" data-cinematic-intro hidden aria-labelledby="intro-title">
     <div class="intro-stars intro-stars-back"></div>
     <div class="intro-stars intro-stars-front"></div>
@@ -27,6 +30,8 @@
     </div>
   </section>
 
+  <!-- Personalize aqui os textos da tela de aniversário e troque as imagens se quiser. -->
+  <!-- Cartão de aniversário: texto, foto, áudio e botão para continuar podem ser personalizados. -->
   <section class="birthday-welcome" data-birthday-welcome hidden role="dialog" aria-modal="true" aria-labelledby="birthday-welcome-title">
     <div class="birthday-confetti" data-birthday-confetti aria-hidden="true"></div>
     <div class="birthday-balloons" aria-hidden="true">
@@ -41,6 +46,13 @@
       <p class="eyebrow">hoje o dia é todinho seu</p>
       <h1 id="birthday-welcome-title">Feliz <span>aniversário!</span></h1>
       <p class="birthday-age">19 anos de uma pessoa maravilhosa ♡</p>
+      <!-- Música de aniversário: arquivo assets/audio/anime-fofo.mp3 -->
+      <audio class="birthday-audio" data-birthday-audio loop preload="metadata" aria-label="Música de anime fofa para o aniversário">
+        <source src="assets/audio/anime-fofo.mp3" type="audio/mpeg" />
+        Seu navegador não consegue reproduzir este áudio.
+      </audio>
+      <button class="birthday-audio-toggle" data-birthday-audio-toggle type="button" aria-label="Tocar música de aniversário" aria-pressed="false"><span aria-hidden="true">♫</span> <span data-birthday-audio-label>Tocar música</span></button>
+      <p class="birthday-audio-status" data-birthday-audio-status aria-live="polite"></p>
       <div class="birthday-photos">
         <div class="birthday-photo">
           <img src="images/aniversario/girassol.jpg" alt="Girassóis para comemorar seu aniversário" />
@@ -52,6 +64,7 @@
   </section>
 
   <div class="page-shell">
+    <!-- Cabeçalho persistente: marca, seletor de tema e links para cada área. -->
     <header class="cabecalho">
       <a href="index.html" class="logo"><span class="logo-full">para minha princesa</span><span class="logo-heart">♡</span><span class="logo-mobile">nosso universo</span></a>
       <div class="header-actions">
@@ -67,15 +80,16 @@
           <a class="menu-link" href="#letters"><span class="menu-icon">♡</span><span><strong>Cartas &amp; surpresas</strong><small>Mensagens feitas com carinho</small></span></a>
           <a class="menu-link" href="#gamer"><span class="menu-icon">◇</span><span><strong>Nosso mundo gamer</strong><small>Jogos e memórias</small></span></a>
           <a class="menu-link" href="#challenges"><span class="menu-icon">✦</span><span><strong>Nossos desafios</strong><small>Quiz e caça-palavras</small></span></a>
-          <button class="menu-link menu-action" type="button" data-theme-menu-toggle><span class="menu-icon">☼</span><span><strong>Alternar tema</strong><small>Claro ou escuro</small></span></button>
-          <button class="menu-link menu-action" type="button" data-audio-menu-toggle><span class="menu-icon">♫</span><span><strong>Trilha sonora</strong><small data-audio-menu-status>Trilha não configurada</small></span></button>
+          <a class="menu-link" href="Paginas/wallpapers.html"><span class="menu-icon">▧</span><span><strong>Nossos wallpapers</strong><small>Para mobile e PC</small></span></a>
         </nav>
       </div>
     </header>
 
     <main class="page-main">
+      <!-- Área principal com apresentação, datas, linha do tempo, galeria e planos. -->
       <section class="universe-section" id="universe" data-area="universe">
         <section class="hero" data-reveal>
+          <!-- Edite os textos de apresentação, chamadas e etiquetas do início aqui. -->
           <div class="hero-copy">
             <p class="eyebrow">um presente para celebrar você</p>
             <h1>Feliz aniversário, <span class="highlight">minha princesa.</span></h1>
@@ -88,17 +102,15 @@
           </div>
           <div class="hero-visual">
             <div class="portrait-frame" data-favorite-carousel role="group" aria-roledescription="carrossel" aria-label="Nossas fotos favoritas">
-              <div class="portrait-slide is-active" data-photo-src="images/fotos-favoritas/foto-01.jpg" data-photo-alt="Nossa foto favorita 1" aria-hidden="false">
+              <div class="portrait-slide is-active" data-photo-src="images/galeria/favoria01.jfif" data-photo-alt="Nossa foto favorita 1" aria-hidden="false">
                 <span>Foto favorita 1</span>
               </div>
-              <div class="portrait-slide" data-photo-src="images/fotos-favoritas/foto-02.jpg" data-photo-alt="Nossa foto favorita 2" aria-hidden="true">
+              <div class="portrait-slide" data-photo-src="images/galeria/favorita02.jfif" data-photo-alt="Nossa foto favorita 2" aria-hidden="true">
                 <span>Foto favorita 2</span>
               </div>
-              <div class="portrait-slide" data-photo-src="images/fotos-favoritas/foto-03.jpg" data-photo-alt="Nossa foto favorita 3" aria-hidden="true">
+              <div class="portrait-slide" data-photo-src="images/galeria/favorita03.jfif" data-photo-alt="Nossa foto favorita 3" aria-hidden="true">
                 <span>Foto favorita 3</span>
               </div>
-              <div class="portrait-glow"></div>
-              <div class="portrait-badge"><strong>foto favorita</strong><p>Um espaço para uma lembrança especial.</p></div>
               <div class="portrait-carousel-controls" aria-label="Controles do carrossel">
                 <button type="button" data-carousel-prev aria-label="Mostrar foto anterior">‹</button>
                 <span data-carousel-status aria-live="polite">1 / 3</span>
@@ -113,6 +125,7 @@
           </div>
         </section>
 
+        <!-- Personalize os títulos, datas e mensagens dos contadores do relacionamento. -->
         <section class="section-shell relationship-section" data-reveal>
           <div class="section-heading"><div><p class="kicker">dois motivos para comemorar</p><h2>19 anos dela, <span class="accent">um ano de nós.</span></h2></div><p>22 de outubro de 2026: seus 19 anos. 25 de outubro de 2026: nosso primeiro ano de namoro.</p></div>
           <div class="birthday-highlight"><span>22 · 10 · 2026</span><strong>Feliz 19 anos, meu amor! ♡</strong></div>
@@ -128,6 +141,7 @@
           </div>
         </section>
 
+        <!-- Escreva os capítulos e lembranças da linha do tempo nestes cartões. -->
         <section class="section-shell" id="timeline" data-reveal>
           <div class="section-heading"><div><p class="kicker">capítulo por capítulo</p><h2>Nossa <span class="accent">história.</span></h2></div><p>Complete os momentos com datas e lembranças reais de vocês.</p></div>
           <div class="story-grid">
@@ -137,24 +151,89 @@
           </div>
         </section>
 
+        <!-- Edite títulos, legendas e caminhos das fotos desta galeria. -->
+        <!-- Para trocar uma imagem, atualize os dois caminhos data-gallery-src/data-photo-src. -->
         <section class="section-shell" id="gallery" data-reveal>
-          <div class="section-heading"><div><p class="kicker">memórias em foco</p><h2>Fotos que valem <span class="accent">mil sorrisos.</span></h2></div><p>Cada espaço pode receber uma foto local e uma legenda editável.</p></div>
+          <div class="section-heading"><div><p class="kicker">memórias em foco</p><h2>Fotos que valem <span class="accent">mil sorrisos.</span></h2></div><p></p></div>
           <div class="photo-collage">
-            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-01.jpg" data-gallery-title="O primeiro sorriso" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-01.jpg"><span>Foto 01</span></div><figcaption>O primeiro sorriso.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-02.jpg" data-gallery-title="O momento que ficou" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-02.jpg"><span>Foto 02</span></div><figcaption>O momento que ficou.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-03.jpg" data-gallery-title="Nosso olhar" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-03.jpg"><span>Foto 03</span></div><figcaption>Nosso olhar.</figcaption></figure>
-            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-04.jpg" data-gallery-title="Quem a gente é" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-04.jpg"><span>Foto 04</span></div><figcaption>Quem a gente é.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-05.jpg" data-gallery-title="Um dia especial" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-05.jpg"><span>Foto 05</span></div><figcaption>Um dia especial.</figcaption></figure>
-            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/foto-06.jpg" data-gallery-title="Mais uma lembrança" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-06.jpg"><span>Foto 06</span></div><figcaption>Mais uma lembrança.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-07.jpg" data-gallery-title="Um passeio nosso" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-07.jpg"><span>Foto 07</span></div><figcaption>Um passeio nosso.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-08.jpg" data-gallery-title="Um sorriso guardado" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-08.jpg"><span>Foto 08</span></div><figcaption>Um sorriso guardado.</figcaption></figure>
-            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/foto-09.jpg" data-gallery-title="Mais uma memória" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/foto-09.jpg"><span>Foto 09</span></div><figcaption>Mais uma memória.</figcaption></figure>
+            <!-- Foto de destaque: substitua o arquivo mantendo este cartão como o primeiro da galeria. -->
+            <figure class="photo-card photo-card-featured" data-gallery-item data-gallery-src="images/galeria/FOTO PRINCIPAL.jfif" data-gallery-title="Foto principal" data-gallery-text="Nossa foto principal.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/FOTO PRINCIPAL.jfif"><span>Foto principal</span></div>
+              <figcaption>Foto principal.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/20251021_135914.jpg" data-gallery-title="Lembrança — 21/10/2025" data-gallery-text="Uma lembrança especial de 21 de outubro de 2025.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/20251021_135914.jpg"><span>21 · 10 · 2025</span></div>
+              <figcaption>Lembrança — 21/10/2025.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/20251025_175742.jpg" data-gallery-title="Lembrança — 25/10/2025" data-gallery-text="Uma lembrança especial de 25 de outubro de 2025.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/20251025_175742.jpg"><span>25 · 10 · 2025</span></div>
+              <figcaption>Lembrança — 25/10/2025.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/VIDEO FOFO.mp4" data-gallery-type="video" data-gallery-title="Vídeo fofo" data-gallery-text="Um vídeo especial para guardar.">
+              <div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/VIDEO FOFO.mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo fofo"></video></div>
+              <figcaption>Vídeo fofo.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/IMG-20251026-WA0146.jpg" data-gallery-title="Lembrança — 26/10/2025" data-gallery-text="Uma lembrança especial de 26 de outubro de 2025.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/IMG-20251026-WA0146.jpg"><span>26 · 10 · 2025</span></div>
+              <figcaption>Lembrança — 26/10/2025.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/um dia especial..mp4" data-gallery-type="video" data-gallery-title="Um dia especial" data-gallery-text="Um dia especial."><div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/um dia especial..mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo: Um dia especial"></video></div><figcaption>Um dia especial.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/IMG-20251105-WA0190.jpg" data-gallery-title="Lembrança — 05/11/2025" data-gallery-text="Uma lembrança especial de 5 de novembro de 2025.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/IMG-20251105-WA0190.jpg"><span>05 · 11 · 2025</span></div>
+              <figcaption>Lembrança — 05/11/2025.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/IMG-20251207-WA0136.jpg" data-gallery-title="Lembrança — 07/12/2025" data-gallery-text="Uma lembrança especial de 7 de dezembro de 2025.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/IMG-20251207-WA0136.jpg"><span>07 · 12 · 2025</span></div>
+              <figcaption>Lembrança — 07/12/2025.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/IMG_20260102_172911_694.jpg" data-gallery-title="Lembrança — 02/01/2026" data-gallery-text="Uma lembrança especial de 2 de janeiro de 2026.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/IMG_20260102_172911_694.jpg"><span>02 · 01 · 2026</span></div>
+              <figcaption>Lembrança — 02/01/2026.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/starbucks.jfif" data-gallery-title="Nosso momento no Starbucks" data-gallery-text="Mais uma lembrança especial juntos.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/starbucks.jfif"><span>Starbucks</span></div>
+              <figcaption>Nosso momento no Starbucks.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/dança.mp4" data-gallery-type="video" data-gallery-title="Nossa dança" data-gallery-text="Um momento especial dançando juntos.">
+              <div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/dança.mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo da dança"></video></div>
+              <figcaption>Nossa dança.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/PRETO E BRANCO.jfif" data-gallery-title="Em preto e branco" data-gallery-text="Uma lembrança nossa em preto e branco.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/PRETO E BRANCO.jfif"><span>Preto e branco</span></div>
+              <figcaption>Em preto e branco.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/pocoyo.mp4" data-gallery-type="video" data-gallery-title="Pocoyo" data-gallery-text="Um vídeo fofo para guardar.">
+              <div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/pocoyo.mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo Pocoyo"></video></div>
+              <figcaption>Pocoyo.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/olinho.jfif" data-gallery-title="Olinho" data-gallery-text="Uma lembrança especial para guardar.">
+              <div class="photo-placeholder" data-photo-src="images/galeria/olinho.jfif"><span>Olinho</span></div>
+              <figcaption>Olinho.</figcaption>
+            </figure>
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/favorita02.jfif" data-gallery-title="O primeiro sorriso" data-gallery-text="[Adicione uma legenda.]"><div class="photo-placeholder" data-photo-src="images/galeria/favorita02.jfif"><span>Foto 01</span></div><figcaption>O primeiro sorriso.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/O momento que ficou.jfif" data-gallery-title="O momento que ficou" data-gallery-text="O momento que ficou."><div class="photo-placeholder" data-photo-src="images/galeria/O momento que ficou.jfif"><span>Foto 02</span></div><figcaption>O momento que ficou.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/nossos Olhos raphael.png" data-gallery-title="Nossos olhos — Raphael" data-gallery-text="Nossos olhos."><div class="photo-placeholder" data-photo-src="images/galeria/nossos Olhos raphael.png"><span>Nossos olhos — Raphael</span></div><figcaption>Nossos olhos — Raphael.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/Nossos olhos fernanda.jfif" data-gallery-title="Nossos olhos — Fernanda" data-gallery-text="Nossos olhos."><div class="photo-placeholder" data-photo-src="images/galeria/Nossos olhos fernanda.jfif"><span>Nossos olhos — Fernanda</span></div><figcaption>Nossos olhos — Fernanda.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/UIIIIIIIIIII.mp4" data-gallery-type="video" data-gallery-title="Uiiiiii" data-gallery-text="Um vídeo especial para guardar.">
+              <div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/UIIIIIIIIIII.mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo Uiiiiii"></video></div>
+              <figcaption>Uiiiiii.</figcaption>
+            </figure>
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/quem a gente é.jfif" data-gallery-title="Quem a gente é" data-gallery-text="Quem a gente é."><div class="photo-placeholder" data-photo-src="images/galeria/quem a gente é.jfif"><span>Foto 04</span></div><figcaption>Quem a gente é.</figcaption></figure>
+            <figure class="photo-card tall" data-gallery-item data-gallery-src="images/galeria/mais uma pra lembrar.jfif" data-gallery-title="Meu primeiro Natal com você" data-gallery-text="Meu primeiro Natal com você."><div class="photo-placeholder" data-photo-src="images/galeria/mais uma pra lembrar.jfif"><span>Meu primeiro Natal com você</span></div><figcaption>Meu primeiro Natal com você.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/um passeio nosso.jfif" data-gallery-title="Fernanda bebê" data-gallery-text="Fernanda bebê."><div class="photo-placeholder" data-photo-src="images/galeria/um passeio nosso.jfif"><span>Fernanda bebê</span></div><figcaption>Fernanda bebê.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-video="images/galeria/ALIANZA.mp4" data-gallery-type="video" data-gallery-title="Aliança" data-gallery-text="Uma lembrança especial da nossa aliança.">
+              <div class="photo-placeholder"><video class="photo-preview-video" src="images/galeria/ALIANZA.mp4" muted autoplay loop playsinline preload="metadata" aria-label="Prévia do vídeo da aliança"></video></div>
+              <figcaption>Aliança.</figcaption>
+            </figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/um sorriso guardado.jfif" data-gallery-title="Um sorriso guardado" data-gallery-text="Um sorriso guardado."><div class="photo-placeholder" data-photo-src="images/galeria/um sorriso guardado.jfif"><span>Foto 08</span></div><figcaption>Um sorriso guardado.</figcaption></figure>
+            <figure class="photo-card" data-gallery-item data-gallery-src="images/galeria/mais uma memoria.jfif" data-gallery-title="Mais uma memória" data-gallery-text="Mais uma memória."><div class="photo-placeholder" data-photo-src="images/galeria/mais uma memoria.jfif"><span>Foto 09</span></div><figcaption>Mais uma memória.</figcaption></figure>
           </div>
           <div class="gallery-modal" data-gallery-modal aria-modal="true" role="dialog" aria-label="Visualização da foto">
-            <div class="gallery-modal-panel"><button class="gallery-close" type="button" aria-label="Fechar imagem">×</button><img class="gallery-modal-art" data-gallery-image alt="" hidden /><div class="gallery-modal-placeholder">Memória</div><div class="gallery-modal-content"><h3>Lembrança</h3><p>Uma lembrança especial para guardar.</p></div></div>
+            <div class="gallery-modal-panel"><button class="gallery-close" type="button" aria-label="Fechar imagem">×</button><img class="gallery-modal-art" data-gallery-image alt="" hidden /><video class="gallery-modal-art" data-gallery-video-player controls playsinline hidden></video><div class="gallery-modal-placeholder">Memória</div><div class="gallery-modal-content"><h3>Lembrança</h3><p>Uma lembrança especial para guardar.</p></div></div>
           </div>
         </section>
 
+        <!-- Edite os sonhos e planos para o futuro nos cartões abaixo. -->
         <section class="section-shell future-section" id="future" data-reveal>
           <div class="section-heading"><div><p class="kicker">ainda temos muito para viver</p><h2>Sonhos para <span class="accent">o futuro.</span></h2></div></div>
           <div class="progress-grid">
@@ -165,6 +244,8 @@
         </section>
       </section>
 
+      <!-- Personalize aqui as cartas, mensagens e surpresa final. -->
+      <!-- Cartas e surpresas: altere títulos e mensagens nos cartões desta área. -->
       <section class="main-area letters-area" id="letters" data-area="letters">
         <section class="page-hero" data-reveal><p class="kicker">palavras vindas do coração</p><h1>Cartas <span class="highlight">&amp; surpresas.</span></h1><p>Uma carta principal, mensagens para ocasiões especiais e uma última surpresa — personalize os espaços com suas próprias palavras.</p></section>
         <section class="page-panel" data-reveal>
@@ -179,12 +260,15 @@
         </section>
       </section>
 
+      <!-- Edite os títulos, legendas e textos da área gamer aqui. -->
+      <!-- Área gamer: avatares, jogos favoritos e espaços para novas capturas. -->
       <section class="main-area gamer-area" id="gamer" data-area="gamer">
         <section class="page-hero" data-reveal><p class="kicker">aventuras no nosso ritmo</p><h1>Nosso mundo <span class="highlight">gamer.</span></h1><p>Um lugar para Roblox, avatares, jogos favoritos e prints de partidas de vocês. Os espaços estão vazios até você adicionar seus próprios arquivos.</p></section>
         <section class="page-panel" data-reveal>
+          <div class="section-heading"><div><h2>Nossos <span class="accent">avatares.</span></h2></div></div>
           <div class="gamer-grid">
-            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/avatar-01.jpg"><span>Avatar 1</span></div><h3>Meu avatar</h3><p>[Nome ou descrição opcional.]</p></article>
-            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/avatar-02.jpg"><span>Avatar 2</span></div><h3>Seu avatar</h3><p>[Nome ou descrição opcional.]</p></article>
+            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/gamer01.png"><span>Avatar 1</span></div></article>
+            <article class="avatar-card"><div class="avatar-portrait" data-photo-src="images/gamer/gamer02.png"><span>Avatar 2</span></div></article>
           </div>
           <div class="section-heading"><div><p class="kicker">prints e lembranças</p><h2>Partidas para <span class="accent">guardar.</span></h2></div><p>Adicione seus prints em images/gamer/ sem inventar imagens.</p></div>
           <div class="photo-collage gamer-photos">
@@ -196,6 +280,8 @@
         </section>
       </section>
 
+      <!-- As perguntas e respostas do quiz também ficam em js/main.js, na função initQuiz. -->
+      <!-- Área interativa: perguntas do quiz e palavras do caça-palavras são editadas em main.js. -->
       <section class="main-area challenges-area" id="challenges" data-area="challenges">
         <section class="page-hero" data-reveal><p class="kicker">desafios e diversão</p><h1>Nossos <span class="highlight">desafios.</span></h1><p>Quiz e caça-palavras funcionais, com progresso e conquistas guardados neste navegador.</p></section>
         <section class="quiz-shell" data-reveal>
@@ -206,6 +292,8 @@
       </section>
     </main>
 
+    <!-- Personalize o texto do rodapé e o áudio principal do site aqui. -->
+    <!-- Controles globais de áudio e rodapé, visíveis após as telas de abertura. -->
     <footer class="rodape">
       <p>Feito com carinho, pensando em você ♡</p>
       <div class="global-audio" id="audio-controls" data-global-audio>
