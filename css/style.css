@@ -355,10 +355,10 @@ body.theme-light .global-audio { background:rgba(255,255,255,.96); color:var(--t
 .page-hidden .intro-stars { animation-play-state:paused; }
 
 /* Tela de aniversário: cartão, foto, player personalizado, confetes e balões. */
-.birthday-welcome { position:fixed; inset:0; z-index:210; display:grid; place-items:center; overflow:hidden; isolation:isolate; padding:24px 14px; background:radial-gradient(ellipse at 50% 35%,#263f5b 0%,#121e30 56%,#080e19 100%); color:#f5f9ff; opacity:0; visibility:hidden; transition:opacity 500ms ease,visibility 500ms ease; }
+.birthday-welcome { position:fixed; inset:0; z-index:210; display:grid; place-items:start center; overflow-x:hidden; overflow-y:auto; isolation:isolate; padding:24px 14px; background:radial-gradient(ellipse at 50% 35%,#263f5b 0%,#121e30 56%,#080e19 100%); color:#f5f9ff; opacity:0; visibility:hidden; transition:opacity 500ms ease,visibility 500ms ease; }
 .birthday-welcome[hidden] { display:none; }
 .birthday-welcome.visible { opacity:1; visibility:visible; }
-.birthday-card { position:relative; z-index:2; width:min(660px,100%); max-height:calc(100vh - 48px); overflow:auto; scrollbar-width:none; -ms-overflow-style:none; display:grid; justify-items:center; padding:clamp(22px,5vw,44px); border:1px solid rgba(205,229,249,.25); border-radius:30px; background:rgba(12,22,36,.82); box-shadow:0 24px 80px rgba(0,0,0,.34); text-align:center; backdrop-filter:blur(12px); animation:birthday-card-arrive 700ms cubic-bezier(.18,.75,.25,1) both; }
+.birthday-card { position:relative; z-index:2; width:min(660px,100%); margin-block:auto; display:grid; justify-items:center; padding:clamp(22px,5vw,44px); border:1px solid rgba(205,229,249,.25); border-radius:30px; background:rgba(12,22,36,.82); box-shadow:0 24px 80px rgba(0,0,0,.34); text-align:center; backdrop-filter:blur(12px); animation:birthday-card-arrive 700ms cubic-bezier(.18,.75,.25,1) both; }
 .birthday-card::-webkit-scrollbar { display:none; }
 .birthday-card .eyebrow { margin-bottom:8px; color:#f5c9df; }
 .birthday-card h1 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2.8rem,9vw,5.5rem); line-height:.98; letter-spacing:-.055em; }
@@ -367,14 +367,14 @@ body.theme-light .global-audio { background:rgba(255,255,255,.96); color:var(--t
 .birthday-photos { width:min(560px,100%); display:grid; grid-template-columns:minmax(0,1fr); gap:16px; margin:4px 0 16px; }
 .birthday-photo { min-width:0; min-height:250px; display:grid; place-items:center; overflow:hidden; border:1px solid rgba(205,229,249,.18); border-radius:18px; background:rgba(255,255,255,.07); }
 .birthday-photo img { width:100%; height:100%; min-height:250px; object-fit:contain; }
-.birthday-message { width:min(500px,100%); min-height:3em; margin:0 0 22px; padding:14px 18px; border-left:2px solid #f5c9df; color:#f5f9ff; text-align:left; white-space:pre-line; }
+.birthday-message { width:min(500px,100%); min-height:3em; margin:0 0 22px; padding:14px 18px; border-left:2px solid #f5c9df; color:#f5f9ff; text-align:left; line-height:1.6; white-space:pre-line; overflow-wrap:anywhere; }
 .birthday-audio { display:none; }
 .birthday-audio-toggle { display:inline-flex; align-items:center; justify-content:center; gap:9px; min-height:46px; margin:0 0 8px; padding:10px 22px; border:1px solid rgba(205,229,249,.3); border-radius:999px; background:linear-gradient(135deg,rgba(245,201,223,.18),rgba(157,215,244,.16)); color:#f5f9ff; font-weight:700; transition:background 180ms ease,transform 180ms ease; }
 .birthday-audio-toggle:hover { transform:translateY(-2px); background:linear-gradient(135deg,rgba(245,201,223,.28),rgba(157,215,244,.26)); }
 .birthday-audio-toggle > span:first-child { color:#f5c9df; font-size:1.1rem; }
 .birthday-audio-toggle[aria-pressed="true"] > span:first-child { animation:equalize .65s ease-in-out infinite alternate; }
 .birthday-audio-status { min-height:1.4em; margin:0 0 14px; color:#d7e6f1; font-size:.78rem; }
-.birthday-card .primary-button { animation:soft-pulse 3s ease-in-out infinite; }
+.birthday-card .primary-button { position:relative; z-index:1; margin-top:4px; animation:soft-pulse 3s ease-in-out infinite; }
 .birthday-confetti, .birthday-balloons { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
 .birthday-confetti { z-index:0; }
 .birthday-confetti-piece { position:absolute; width:9px; height:14px; border-radius:2px; background:hsl(var(--hue) 85% 70%); opacity:.85; animation:birthday-confetti-fall var(--fall-duration,1ms) linear var(--fall-delay,0s) infinite; }
