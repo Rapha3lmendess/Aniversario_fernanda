@@ -627,7 +627,7 @@ function initWordSearch() {
   const root = document.querySelector('[data-word-search]');
   if (!root) return;
   // Edite aqui as palavras que aparecem no caça-palavras.
-  const words = ['AMOR', 'BEIJO', 'PRINCESA', 'CARINHO', 'SAUDADE'];
+  const words = ['AMOR', 'BEIJO', 'PRINCESA', 'CARINHO', 'SAUDADE', 'ALIANCA', 'RAPHINHA'];
   const size = 8;
   const directions = [[0,1],[1,0],[1,1],[1,-1],[0,-1],[-1,0],[-1,-1],[-1,1]];
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
